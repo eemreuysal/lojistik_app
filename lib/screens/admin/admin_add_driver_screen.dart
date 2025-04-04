@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import '../../config/theme.dart';
 import '../../providers/drivers_provider.dart';
 
 class AdminAddDriverScreen extends StatefulWidget {
@@ -69,154 +68,257 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
     return Scaffold(
       body: Container(
         width: 430,
-        height: 534,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: const Alignment(0.00, 0.00),
-            end: const Alignment(1.00, 1.00),
-            colors: [
-              const Color(0xFF06263E),
-              const Color(0xFF10344F),
-              const Color(0xFF1E485C)
-            ],
-          ),
-        ),
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Üst Kısım (Başlık)
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "Şoför Ekle",
-                  style: AppTheme.manropeBold(22, Colors.white),
+        height: 932,
+        clipBehavior: Clip.antiAlias,
+        decoration: BoxDecoration(color: Colors.white),
+        child: Stack(
+          children: [
+            // Background gradient
+            Positioned(
+              left: 0,
+              top: 0,
+              child: Container(
+                width: 430,
+                height: 534,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment(0.00, 0.00),
+                    end: Alignment(1.00, 1.00),
+                    colors: [
+                      const Color(0xFF06263E),
+                      const Color(0xFF10344F),
+                      const Color(0xFF1E485C)
+                    ],
+                  ),
                 ),
               ),
+            ),
 
-              // Form Alanı
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      topRight: Radius.circular(30),
-                    ),
-                  ),
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(24),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Ad ve Soyad alanları yan yana
-                          Row(
-                            children: [
-                              // Ad alanı
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Ad",
-                                      style: AppTheme.manropeRegular(
-                                          14, Colors.grey),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    TextFormField(
-                                      controller: _firstNameController,
-                                      decoration: InputDecoration(
-                                        hintText: "Ad",
-                                        hintStyle: AppTheme.interMedium(
-                                            14, Colors.grey.withAlpha(153)),
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 14),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          borderSide: BorderSide(
-                                              color: Colors.grey.withAlpha(77)),
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Ad alanı boş bırakılamaz';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
+            // Light gray background
+            Positioned(
+              left: 0,
+              top: 115,
+              child: Container(
+                width: 430,
+                height: 822,
+                decoration: ShapeDecoration(
+                  color: const Color(0xFFF8F8F8),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                ),
+              ),
+            ),
 
-                              const SizedBox(width: 16),
+            // White bottom bar
+            Positioned(
+              left: 0,
+              top: 828,
+              child: Container(
+                width: 430,
+                height: 104,
+                decoration: ShapeDecoration(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5)),
+                ),
+              ),
+            ),
 
-                              // Soyad alanı
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Soyad",
-                                      style: AppTheme.manropeRegular(
-                                          14, Colors.grey),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    TextFormField(
-                                      controller: _lastNameController,
-                                      decoration: InputDecoration(
-                                        hintText: "Soyad",
-                                        hintStyle: AppTheme.interMedium(
-                                            14, Colors.grey.withAlpha(153)),
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                horizontal: 16, vertical: 14),
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          borderSide: BorderSide(
-                                              color: Colors.grey.withAlpha(77)),
-                                        ),
-                                      ),
-                                      validator: (value) {
-                                        if (value == null || value.isEmpty) {
-                                          return 'Soyad alanı boş bırakılamaz';
-                                        }
-                                        return null;
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
+            // Title
+            Positioned(
+              left: 19,
+              top: 67,
+              child: Text(
+                'Şoför Ekle',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontFamily: 'Manrope',
+                  fontWeight: FontWeight.w700,
+                  height: 1.09,
+                ),
+              ),
+            ),
+
+            // Form ve form elemanları
+            Positioned(
+              left: 0,
+              top: 115,
+              child: Form(
+                key: _formKey,
+                child: SizedBox(
+                  width: 430,
+                  height: 700,
+                  child: Stack(
+                    children: [
+                      // First name label
+                      Positioned(
+                        left: 19,
+                        top: 14,
+                        child: SizedBox(
+                          width: 184.79,
+                          child: Text(
+                            'Adı',
+                            style: TextStyle(
+                              color: const Color(0xFF878787),
+                              fontSize: 15,
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.w600,
+                              height: 1.60,
+                            ),
                           ),
+                        ),
+                      ),
 
-                          const SizedBox(height: 24),
-
-                          // Telefon numarası alanı
-                          Text(
-                            "Telefon Numarası",
-                            style: AppTheme.manropeRegular(14, Colors.grey),
+                      // First name field
+                      Positioned(
+                        left: 19,
+                        top: 42,
+                        child: Container(
+                          width: 189.92,
+                          height: 50,
+                          decoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                width: 1,
+                                color: const Color(0xFFDFE2E3),
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
                           ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _phoneController,
+                          child: TextFormField(
+                            controller: _firstNameController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Ad alanı boş bırakılamaz';
+                              }
+                              return null;
+                            },
                             decoration: InputDecoration(
-                              hintText: "05XX XXX XX XX",
-                              hintStyle: AppTheme.interMedium(
-                                  14, Colors.grey.withAlpha(153)),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 14),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: Colors.grey.withAlpha(77)),
+                              hintText: 'Adı',
+                              hintStyle: TextStyle(
+                                color: const Color(0xFFC1C1C2),
+                                fontSize: 18,
+                                fontFamily: 'Manrope',
+                                fontWeight: FontWeight.w600,
+                                height: 1.33,
+                              ),
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              border: InputBorder.none,
+                              errorStyle: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
                               ),
                             ),
+                          ),
+                        ),
+                      ),
+
+                      // Last name label
+                      Positioned(
+                        left: 223,
+                        top: 14,
+                        child: SizedBox(
+                          width: 180,
+                          child: Text(
+                            'Soyadı',
+                            style: TextStyle(
+                              color: const Color(0xFF878787),
+                              fontSize: 15,
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.w600,
+                              height: 1.60,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Last name field
+                      Positioned(
+                        left: 223,
+                        top: 42,
+                        child: Container(
+                          width: 185,
+                          height: 50,
+                          decoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                width: 1,
+                                color: const Color(0xFFDFE2E3),
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: TextFormField(
+                            controller: _lastNameController,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Soyad alanı boş bırakılamaz';
+                              }
+                              return null;
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Soyadı',
+                              hintStyle: TextStyle(
+                                color: const Color(0xFFC1C1C2),
+                                fontSize: 18,
+                                fontFamily: 'Manrope',
+                                fontWeight: FontWeight.w600,
+                                height: 1.33,
+                              ),
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              border: InputBorder.none,
+                              errorStyle: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Phone label
+                      Positioned(
+                        left: 19,
+                        top: 102,
+                        child: SizedBox(
+                          width: 180,
+                          child: Text(
+                            'Telefon Numarası',
+                            style: TextStyle(
+                              color: const Color(0xFF878787),
+                              fontSize: 15,
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.w600,
+                              height: 1.60,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Phone field
+                      Positioned(
+                        left: 19,
+                        top: 130,
+                        child: Container(
+                          width: 384,
+                          height: 50,
+                          decoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                width: 1,
+                                color: const Color(0xFFDFE2E3),
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: TextFormField(
+                            controller: _phoneController,
                             keyboardType: TextInputType.phone,
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
@@ -230,113 +332,182 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                               }
                               return null;
                             },
-                          ),
-
-                          const SizedBox(height: 24),
-
-                          // TC Kimlik numarası alanı
-                          Text(
-                            "TC Kimlik Numarası",
-                            style: AppTheme.manropeRegular(14, Colors.grey),
-                          ),
-                          const SizedBox(height: 8),
-                          TextFormField(
-                            controller: _nationalIdController,
                             decoration: InputDecoration(
-                              hintText: "TC Kimlik No",
-                              hintStyle: AppTheme.interMedium(
-                                  14, Colors.grey.withAlpha(153)),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 14),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(
-                                    color: Colors.grey.withAlpha(77)),
+                              hintText: 'Telefon Numarası',
+                              hintStyle: TextStyle(
+                                color: const Color(0xFFC1C1C2),
+                                fontSize: 18,
+                                fontFamily: 'Manrope',
+                                fontWeight: FontWeight.w600,
+                                height: 1.33,
+                              ),
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              border: InputBorder.none,
+                              errorStyle: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
                               ),
                             ),
+                          ),
+                        ),
+                      ),
+
+                      // National ID label
+                      Positioned(
+                        left: 19,
+                        top: 190,
+                        child: SizedBox(
+                          width: 180,
+                          child: Text(
+                            'TC Kimlik No',
+                            style: TextStyle(
+                              color: const Color(0xFF878787),
+                              fontSize: 15,
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.w600,
+                              height: 1.60,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // National ID field
+                      Positioned(
+                        left: 19,
+                        top: 218,
+                        child: Container(
+                          width: 384,
+                          height: 50,
+                          decoration: ShapeDecoration(
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              side: BorderSide(
+                                width: 1,
+                                color: const Color(0xFFDFE2E3),
+                              ),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: TextFormField(
+                            controller: _nationalIdController,
                             keyboardType: TextInputType.number,
                             inputFormatters: [
                               FilteringTextInputFormatter.digitsOnly,
                               LengthLimitingTextInputFormatter(11),
                             ],
                             validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return 'TC kimlik numarası boş bırakılamaz';
-                              } else if (value.length != 11) {
+                              // TC Kimlik No opsiyonel
+                              if (value != null &&
+                                  value.isNotEmpty &&
+                                  value.length != 11) {
                                 return 'TC kimlik numarası 11 haneli olmalıdır';
                               }
                               return null;
                             },
+                            decoration: InputDecoration(
+                              hintText: 'TC Kimlik No',
+                              hintStyle: TextStyle(
+                                color: const Color(0xFFC1C1C2),
+                                fontSize: 18,
+                                fontFamily: 'Manrope',
+                                fontWeight: FontWeight.w600,
+                                height: 1.33,
+                              ),
+                              contentPadding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              border: InputBorder.none,
+                              errorStyle: const TextStyle(
+                                color: Colors.red,
+                                fontSize: 12,
+                              ),
+                            ),
                           ),
-                        ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            // Bottom buttons
+            // Cancel button
+            Positioned(
+              left: 26,
+              top: 850,
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Container(
+                  width: 179,
+                  height: 60,
+                  decoration: ShapeDecoration(
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                        width: 1,
+                        color: const Color(0xFFE0E2E3),
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Vazgeç',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: const Color(0xFF474747),
+                        fontSize: 18,
+                        fontFamily: 'Manrope',
+                        fontWeight: FontWeight.w600,
+                        height: 1.33,
                       ),
                     ),
                   ),
                 ),
               ),
+            ),
 
-              // Alt butonlar (Vazgeç ve Kaydet)
-              Container(
-                padding: const EdgeInsets.all(16),
-                color: Colors.white,
-                child: Row(
-                  children: [
-                    // Vazgeç butonu
-                    Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => Navigator.pop(context),
-                        style: OutlinedButton.styleFrom(
-                          foregroundColor: AppTheme.textDark,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          side: BorderSide(
-                              color: AppTheme.textGrey.withAlpha(128)),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: Text(
-                          'Vazgeç',
-                          style: AppTheme.manropeSemiBold(14),
-                        ),
-                      ),
+            // Save button
+            Positioned(
+              left: 225,
+              top: 850,
+              child: GestureDetector(
+                onTap: driversProvider.isLoading ? null : _saveDriver,
+                child: Container(
+                  width: 179,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment(0.00, 0.00),
+                      end: Alignment(1.00, 1.00),
+                      colors: [
+                        const Color(0xFF06263E),
+                        const Color(0xFF10344F),
+                        const Color(0xFF1E485C)
+                      ],
                     ),
-
-                    const SizedBox(width: 16),
-
-                    // Kaydet butonu
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed:
-                            driversProvider.isLoading ? null : _saveDriver,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.primaryDark,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(
+                    child: driversProvider.isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            'Kaydet',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.w600,
+                              height: 1.33,
+                            ),
                           ),
-                        ),
-                        child: driversProvider.isLoading
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text(
-                                'Kaydet',
-                                style:
-                                    AppTheme.manropeSemiBold(14, Colors.white),
-                              ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
