@@ -17,7 +17,7 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
   final _lastNameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _nationalIdController = TextEditingController();
-  
+
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -29,8 +29,9 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
 
   Future<void> _saveDriver() async {
     if (_formKey.currentState!.validate()) {
-      final driversProvider = Provider.of<DriversProvider>(context, listen: false);
-      
+      final driversProvider =
+          Provider.of<DriversProvider>(context, listen: false);
+
       final driverData = {
         'first_name': _firstNameController.text,
         'last_name': _lastNameController.text,
@@ -38,9 +39,9 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
         'national_id': _nationalIdController.text,
         'is_active': true,
       };
-      
+
       final success = await driversProvider.addDriver(driverData);
-      
+
       if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -52,7 +53,8 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(driversProvider.error ?? 'Şoför eklenirken bir hata oluştu'),
+            content: Text(
+                driversProvider.error ?? 'Şoför eklenirken bir hata oluştu'),
             backgroundColor: Colors.red,
           ),
         );
@@ -63,11 +65,21 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
   @override
   Widget build(BuildContext context) {
     final driversProvider = Provider.of<DriversProvider>(context);
-    
+
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppTheme.primaryGradient,
+        width: 430,
+        height: 534,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: const Alignment(0.00, 0.00),
+            end: const Alignment(1.00, 1.00),
+            colors: [
+              const Color(0xFF06263E),
+              const Color(0xFF10344F),
+              const Color(0xFF1E485C)
+            ],
+          ),
         ),
         child: SafeArea(
           child: Column(
@@ -81,7 +93,7 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                   style: AppTheme.manropeBold(22, Colors.white),
                 ),
               ),
-              
+
               // Form Alanı
               Expanded(
                 child: Container(
@@ -110,18 +122,24 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                                   children: [
                                     Text(
                                       "Ad",
-                                      style: AppTheme.manropeRegular(14, Colors.grey),
+                                      style: AppTheme.manropeRegular(
+                                          14, Colors.grey),
                                     ),
                                     const SizedBox(height: 8),
                                     TextFormField(
                                       controller: _firstNameController,
                                       decoration: InputDecoration(
                                         hintText: "Ad",
-                                        hintStyle: AppTheme.interMedium(14, Colors.grey.withAlpha(153)),
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                        hintStyle: AppTheme.interMedium(
+                                            14, Colors.grey.withAlpha(153)),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 14),
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
-                                          borderSide: BorderSide(color: Colors.grey.withAlpha(77)),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: BorderSide(
+                                              color: Colors.grey.withAlpha(77)),
                                         ),
                                       ),
                                       validator: (value) {
@@ -134,9 +152,9 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                                   ],
                                 ),
                               ),
-                              
+
                               const SizedBox(width: 16),
-                              
+
                               // Soyad alanı
                               Expanded(
                                 child: Column(
@@ -144,18 +162,24 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                                   children: [
                                     Text(
                                       "Soyad",
-                                      style: AppTheme.manropeRegular(14, Colors.grey),
+                                      style: AppTheme.manropeRegular(
+                                          14, Colors.grey),
                                     ),
                                     const SizedBox(height: 8),
                                     TextFormField(
                                       controller: _lastNameController,
                                       decoration: InputDecoration(
                                         hintText: "Soyad",
-                                        hintStyle: AppTheme.interMedium(14, Colors.grey.withAlpha(153)),
-                                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                                        hintStyle: AppTheme.interMedium(
+                                            14, Colors.grey.withAlpha(153)),
+                                        contentPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 14),
                                         border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(10),
-                                          borderSide: BorderSide(color: Colors.grey.withAlpha(77)),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: BorderSide(
+                                              color: Colors.grey.withAlpha(77)),
                                         ),
                                       ),
                                       validator: (value) {
@@ -170,9 +194,9 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                               ),
                             ],
                           ),
-                          
+
                           const SizedBox(height: 24),
-                          
+
                           // Telefon numarası alanı
                           Text(
                             "Telefon Numarası",
@@ -183,11 +207,14 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                             controller: _phoneController,
                             decoration: InputDecoration(
                               hintText: "05XX XXX XX XX",
-                              hintStyle: AppTheme.interMedium(14, Colors.grey.withAlpha(153)),
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                              hintStyle: AppTheme.interMedium(
+                                  14, Colors.grey.withAlpha(153)),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 14),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.grey.withAlpha(77)),
+                                borderSide: BorderSide(
+                                    color: Colors.grey.withAlpha(77)),
                               ),
                             ),
                             keyboardType: TextInputType.phone,
@@ -204,9 +231,9 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                               return null;
                             },
                           ),
-                          
+
                           const SizedBox(height: 24),
-                          
+
                           // TC Kimlik numarası alanı
                           Text(
                             "TC Kimlik Numarası",
@@ -217,11 +244,14 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                             controller: _nationalIdController,
                             decoration: InputDecoration(
                               hintText: "TC Kimlik No",
-                              hintStyle: AppTheme.interMedium(14, Colors.grey.withAlpha(153)),
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                              hintStyle: AppTheme.interMedium(
+                                  14, Colors.grey.withAlpha(153)),
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 14),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide(color: Colors.grey.withAlpha(77)),
+                                borderSide: BorderSide(
+                                    color: Colors.grey.withAlpha(77)),
                               ),
                             ),
                             keyboardType: TextInputType.number,
@@ -244,7 +274,7 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                   ),
                 ),
               ),
-              
+
               // Alt butonlar (Vazgeç ve Kaydet)
               Container(
                 padding: const EdgeInsets.all(16),
@@ -258,7 +288,8 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppTheme.textDark,
                           padding: const EdgeInsets.symmetric(vertical: 16),
-                          side: BorderSide(color: AppTheme.textGrey.withAlpha(128)),
+                          side: BorderSide(
+                              color: AppTheme.textGrey.withAlpha(128)),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -269,13 +300,14 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                         ),
                       ),
                     ),
-                    
+
                     const SizedBox(width: 16),
-                    
+
                     // Kaydet butonu
                     Expanded(
                       child: ElevatedButton(
-                        onPressed: driversProvider.isLoading ? null : _saveDriver,
+                        onPressed:
+                            driversProvider.isLoading ? null : _saveDriver,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppTheme.primaryDark,
                           foregroundColor: Colors.white,
@@ -295,7 +327,8 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                               )
                             : Text(
                                 'Kaydet',
-                                style: AppTheme.manropeSemiBold(14, Colors.white),
+                                style:
+                                    AppTheme.manropeSemiBold(14, Colors.white),
                               ),
                       ),
                     ),

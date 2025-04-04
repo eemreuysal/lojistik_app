@@ -180,47 +180,29 @@ class _AdminDriversScreenState extends State<AdminDriversScreen> {
                                 child: Container(
                                   width: 400,
                                   height: 45,
-                                  decoration: ShapeDecoration(
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      side: const BorderSide(
-                                        width: 1,
-                                        color: Color(0xFFDFE2E3), // Figma rengi
-                                      ),
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFD3F0FF),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Row(
-                                    children: [
-                                      const SizedBox(width: 11.40),
-                                      const Icon(
+                                  child: TextField(
+                                    controller: _searchController,
+                                    decoration: const InputDecoration(
+                                      hintText: "Şöförlerde ara...",
+                                      hintStyle: TextStyle(
+                                        color: Color(0xFF93B6C2),
+                                        fontSize: 14,
+                                        fontFamily: 'Inter',
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                      prefixIcon: Icon(
                                         Icons.search,
-                                        color: Color(0xFFC1C1C2), // Figma rengi
-                                        size: 24.22,
+                                        color: Color(0xFF93B6C2),
+                                        size: 24,
                                       ),
-                                      const SizedBox(width: 8),
-                                      Expanded(
-                                        child: TextField(
-                                          controller: _searchController,
-                                          decoration: const InputDecoration(
-                                            hintText: "Şöförlerde ara...",
-                                            hintStyle: TextStyle(
-                                              color: Color(
-                                                  0xFFC1C1C2), // Figma rengi
-                                              fontSize: 15,
-                                              fontFamily: 'Manrope',
-                                              fontWeight: FontWeight.w600,
-                                              height:
-                                                  1.60, // Figma'daki gibi height
-                                            ),
-                                            border: InputBorder.none,
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    vertical: 12),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
+                                      border: InputBorder.none,
+                                      contentPadding:
+                                          EdgeInsets.symmetric(vertical: 12),
+                                    ),
                                   ),
                                 ),
                               ),

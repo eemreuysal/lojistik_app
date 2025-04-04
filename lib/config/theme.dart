@@ -14,11 +14,15 @@ class AppTheme {
   static const Color textLightGrey = Color(0xFFBCBEC2);
   static const Color borderColor = Color(0xFFEBEBEB);
   static const Color statusBlue = Color(0xFF2D4856);
-  
+  static const Color backgroundGrey =
+      Color(0xFFF8F8F8); // Figma'dan eklenen arka plan rengi
+
   // Figma tasarımından eklenen yeni renkler
-  static const Color navIconColor = Color(0xFFDDDDDD); // Navigation bar icon rengi
-  static const Color iconGrey = Color(0xFF7B7B7B); // Şoför kart ikonları için gri
-  
+  static const Color navIconColor =
+      Color(0xFFDDDDDD); // Navigation bar icon rengi
+  static const Color iconGrey =
+      Color(0xFF7B7B7B); // Şoför kart ikonları için gri
+
   // Gradient
   static const LinearGradient primaryGradient = LinearGradient(
     begin: Alignment(-0.61, 0.5),
@@ -30,7 +34,7 @@ class AppTheme {
     ],
     stops: [0.004, 0.531, 1.0],
   );
-  
+
   // Bottom Navigation Bar Gradient
   static const LinearGradient navBarGradient = LinearGradient(
     begin: Alignment(-0.32, 0.18),
@@ -43,7 +47,19 @@ class AppTheme {
     stops: [0.004, 0.531, 1.0],
   );
 
-  // Text Styles  
+  // Container Styles
+  static ShapeDecoration containerDecoration = ShapeDecoration(
+    color: backgroundGrey,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(5),
+    ),
+  );
+
+  // Standart container boyutları (Figma'dan)
+  static const double standardContainerWidth = 430;
+  static const double standardContainerHeight = 822;
+
+  // Text Styles
   static TextStyle manropeBold(double size, [Color? color]) {
     return GoogleFonts.manrope(
       fontSize: size,
@@ -51,7 +67,7 @@ class AppTheme {
       color: color ?? textDark,
     );
   }
-  
+
   static TextStyle manropeSemiBold(double size, [Color? color]) {
     return GoogleFonts.manrope(
       fontSize: size,
@@ -67,15 +83,16 @@ class AppTheme {
       color: color ?? textDark,
     );
   }
-  
+
   static TextStyle clashGroteskSemiBold(double size, [Color? color]) {
-    return GoogleFonts.inter(  // Google Fonts'ta tam eşdeğeri olmadığı için Inter kullanıyoruz
+    return GoogleFonts.inter(
+      // Google Fonts'ta tam eşdeğeri olmadığı için Inter kullanıyoruz
       fontSize: size,
       fontWeight: FontWeight.w600,
       color: color ?? textDark,
     );
   }
-  
+
   static TextStyle interRegular(double size, [Color? color]) {
     return GoogleFonts.inter(
       fontSize: size,
@@ -83,7 +100,7 @@ class AppTheme {
       color: color ?? textDark,
     );
   }
-  
+
   static TextStyle interMedium(double size, [Color? color]) {
     return GoogleFonts.inter(
       fontSize: size,
@@ -96,7 +113,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       primaryColor: primaryDark,
-      scaffoldBackgroundColor: white,
+      scaffoldBackgroundColor: backgroundGrey,
       appBarTheme: const AppBarTheme(
         backgroundColor: primaryDark,
         elevation: 0,

@@ -5,6 +5,7 @@ import '../../providers/auth_provider.dart';
 import '../../providers/dashboard_provider.dart';
 import '../../models/trip_model.dart';
 import 'admin_create_trip_screen.dart';
+import 'admin_drivers_screen.dart';
 import 'admin_truck_screen.dart';
 import 'profile_edit_screen.dart';
 import '../../widgets/profile_image_widget.dart';
@@ -286,14 +287,25 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       Positioned(
                         left: 17,
                         top: 94,
-                        child: Text(
-                          '${dashboardProvider.driverCount} Şöför',
-                          style: TextStyle(
-                            color: const Color(0xFF474747),
-                            fontSize: 18,
-                            fontFamily: 'Clash Grotesk',
-                            fontWeight: FontWeight.w600,
-                            height: 1.33,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const AdminDriversScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            '${dashboardProvider.driverCount} Şöför',
+                            style: TextStyle(
+                              color: const Color(0xFF474747),
+                              fontSize: 18,
+                              fontFamily: 'Clash Grotesk',
+                              fontWeight: FontWeight.w600,
+                              height: 1.33,
+                            ),
                           ),
                         ),
                       ),
@@ -383,11 +395,10 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                                   ),
                                 ),
                                 Positioned(
-                                  left: 0,
-                                  right: 0,
-                                  bottom: -8,
+                                  right: -100,
+                                  bottom: 38,
                                   child: Align(
-                                    alignment: Alignment.centerLeft,
+                                    alignment: Alignment.center,
                                     child: Container(
                                       width: 34,
                                       height: 3,
