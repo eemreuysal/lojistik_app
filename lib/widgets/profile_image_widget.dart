@@ -34,7 +34,11 @@ class ProfileImageWidget extends StatelessWidget {
       child: Container(
         width: radius * 2,
         height: radius * 2,
-        color: backgroundColor,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          shape: BoxShape.circle,
+        ),
+        clipBehavior: Clip.antiAlias,
         child: imageUrl != null
             ? _buildProfileImage()
             : Center(
@@ -51,18 +55,19 @@ class ProfileImageWidget extends StatelessWidget {
     try {
       // Gelen URL'yi tamamen temizle ve analiz et
       String url = imageUrl!;
-      
-      // file:// öneklerini kaldır 
+
+      // file:// öneklerini kaldır
       if (url.startsWith('file://')) {
         url = url.substring(7);
       }
-      
+
       // data:image base64 formatı için
       if (url.contains('data:image') && url.contains('base64')) {
         try {
           // Base64 kısmını ayıkla
           final dataStart = url.indexOf(',') + 1;
-          if (dataStart > 1) { // Geçerli bir index ise
+          if (dataStart > 1) {
+            // Geçerli bir index ise
             final base64Data = url.substring(dataStart);
             if (base64Data.isNotEmpty) {
               try {
@@ -89,8 +94,8 @@ class ProfileImageWidget extends StatelessWidget {
           logger.e("Base64 işleme hatası: $base64Error");
           return _buildFallbackContent();
         }
-      } 
-      
+      }
+
       // Standart dosya yolu
       if (url.startsWith('/')) {
         try {
@@ -113,7 +118,6 @@ class ProfileImageWidget extends StatelessWidget {
       // Diğer format - en iyi tahmin et
       logger.d("Tanımlanamayan fotoğraf formatı, varsayılan kullanılacak");
       return _buildFallbackContent();
-        
     } catch (e) {
       logger.e("Profil fotoğrafı yükleme hatası: $e");
       return _buildFallbackContent();

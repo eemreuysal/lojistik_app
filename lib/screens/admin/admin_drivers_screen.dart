@@ -205,15 +205,18 @@ class _AdminDriversScreenState extends State<AdminDriversScreen> {
                                           decoration: const InputDecoration(
                                             hintText: "Şöförlerde ara...",
                                             hintStyle: TextStyle(
-                                              color: Color(0xFFC1C1C2), // Figma rengi
+                                              color: Color(
+                                                  0xFFC1C1C2), // Figma rengi
                                               fontSize: 15,
                                               fontFamily: 'Manrope',
                                               fontWeight: FontWeight.w600,
-                                              height: 1.60, // Figma'daki gibi height
+                                              height:
+                                                  1.60, // Figma'daki gibi height
                                             ),
                                             border: InputBorder.none,
                                             contentPadding:
-                                                EdgeInsets.symmetric(vertical: 12),
+                                                EdgeInsets.symmetric(
+                                                    vertical: 12),
                                           ),
                                         ),
                                       ),
