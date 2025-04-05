@@ -178,7 +178,7 @@ class _AdminDriversScreenState extends State<AdminDriversScreen> {
                                 left: 0,
                                 top: 0,
                                 child: Container(
-                                  width: 400,
+                                  width: 397,
                                   height: 45,
                                   decoration: BoxDecoration(
                                     color: const Color(0xFFD3F0FF),

@@ -7,6 +7,7 @@ import '../../models/trip_model.dart';
 import 'admin_create_trip_screen.dart';
 import 'admin_drivers_screen.dart';
 import 'admin_truck_screen.dart';
+import 'admin_vehicles_screen.dart';
 import 'profile_edit_screen.dart';
 import '../../widgets/profile_image_widget.dart';
 
@@ -272,14 +273,25 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                       Positioned(
                         left: 122,
                         top: 94,
-                        child: Text(
-                          '${dashboardProvider.vehicleCount} Araç',
-                          style: TextStyle(
-                            color: const Color(0xFF474747),
-                            fontSize: 18,
-                            fontFamily: 'Clash Grotesk',
-                            fontWeight: FontWeight.w600,
-                            height: 1.33,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const AdminVehiclesScreen(),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            '${dashboardProvider.vehicleCount} Araç',
+                            style: TextStyle(
+                              color: const Color(0xFF474747),
+                              fontSize: 18,
+                              fontFamily: 'Clash Grotesk',
+                              fontWeight: FontWeight.w600,
+                              height: 1.33,
+                            ),
                           ),
                         ),
                       ),

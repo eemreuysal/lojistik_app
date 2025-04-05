@@ -25,26 +25,25 @@ class AppTheme {
 
   // Gradient
   static const LinearGradient primaryGradient = LinearGradient(
-    begin: Alignment(-0.61, 0.5),
-    end: Alignment(0.39, -0.5),
+    begin: Alignment(-0.61, 0.50),
+    end: Alignment(0.39, 1.11),
     colors: [
-      Color(0xFF07263E),
-      Color(0xFF103450),
-      Color(0xFF1E485C),
+      Color.fromRGBO(7, 38, 62, 1),
+      Color.fromRGBO(16, 52, 80, 1),
+      Color.fromRGBO(30, 72, 92, 1),
     ],
     stops: [0.004, 0.531, 1.0],
   );
 
   // Bottom Navigation Bar Gradient
   static const LinearGradient navBarGradient = LinearGradient(
-    begin: Alignment(-0.32, 0.18),
-    end: Alignment(1.01, 0.63),
+    begin: Alignment(0.01, 0.50),
+    end: Alignment(1.00, 0.50),
     colors: [
-      Color(0xFF07263E),
-      Color(0xFF103450),
-      Color(0xFF1E485C),
+      Color(0xFF06263E),
+      Color(0xFF10344F),
+      Color(0xFF1E485C)
     ],
-    stops: [0.004, 0.531, 1.0],
   );
 
   // Container Styles
