@@ -142,7 +142,7 @@ class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
                 ),
               ),
 
-            Expanded(
+              Expanded(
                 child: Container(
                   margin: const EdgeInsets.only(top: 10),
                   decoration: const BoxDecoration(
@@ -162,8 +162,7 @@ class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
                           height: 75,
                           child: Stack(
                             children: [
-
- // Arama kutusu
+                              // Arama kutusu
                               Positioned(
                                 left: 0,
                                 top: 0,
@@ -176,22 +175,23 @@ class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
                                   ),
                                   child: TextField(
                                     controller: _searchController,
-                                    decoration: InputDecoration( // Removed const
-                                      hintText: "Araçlarda ara...", // Fixed quotes
-                                      hintStyle: const TextStyle( // Added const here as TextStyle can be const
+                                    decoration: InputDecoration(
+                                      hintText: "Araçlarda ara...",
+                                      hintStyle: const TextStyle(
                                         color: Color(0xFF93B6C2),
                                         fontSize: 14,
                                         fontFamily: 'Inter',
                                         fontWeight: FontWeight.w500,
                                       ),
-                                      prefixIcon: const Icon( // Added const here as Icon can be const
+                                      prefixIcon: const Icon(
                                         Icons.search,
                                         color: Color(0xFF93B6C2),
                                         size: 24,
                                       ),
                                       border: InputBorder.none,
-                                      contentPadding: const EdgeInsets.symmetric( // Added const here
-                                          vertical: 12),
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 12),
                                     ),
                                   ),
                                 ),
@@ -204,14 +204,14 @@ class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
                                 child: SizedBox(
                                   width: 127,
                                   child: Text(
-                                    "Toplam ${vehiclesProvider.vehicleCount} Araç", // Removed leading whitespace
+                                    "Toplam ${vehiclesProvider.vehicleCount} Araç",
                                     textAlign: TextAlign.right,
                                     style: const TextStyle(
-                                      color: Color(0xFFC1C1C2), // Figma rengi
+                                      color: Color(0xFFC1C1C2),
                                       fontSize: 13,
                                       fontFamily: 'Manrope',
                                       fontWeight: FontWeight.w500,
-                                      height: 1.85, // Figma'daki gibi height
+                                      height: 1.85,
                                     ),
                                   ),
                                 ),
@@ -221,34 +221,38 @@ class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
                         ),
                       ),
 
-
-              // Araç listesi
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 15.0),
-                  child: vehiclesProvider.isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                              color: Color(0xFF0C2D41)))
-                      : vehiclesProvider.vehicles.isEmpty
-                          ? Center(
-                              child: Text(
-                                "Araç bulunmamaktadır.",
-                                style: AppTheme.manropeSemiBold(16),
-                              ),
-                            )
-                          : ListView.separated(
-                              padding: const EdgeInsets.only( // Added const
-                                  bottom: 95), // Navbar için alt boşluk
-                              itemCount: vehiclesProvider.vehicles.length,
-                              separatorBuilder: (context, index) =>
-                                  const SizedBox(height: 10),
-                              itemBuilder: (context, index) {
-                                final vehicle =
-                                    vehiclesProvider.vehicles[index];
-                                return _buildVehicleCard(vehicle);
-                              },
-                            ),
+                      // Araç listesi
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                          child: vehiclesProvider.isLoading
+                              ? const Center(
+                                  child: CircularProgressIndicator(
+                                      color: Color(0xFF0C2D41)))
+                              : vehiclesProvider.vehicles.isEmpty
+                                  ? Center(
+                                      child: Text(
+                                        "Araç bulunmamaktadır.",
+                                        style: AppTheme.manropeSemiBold(16),
+                                      ),
+                                    )
+                                  : ListView.separated(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 95),
+                                      itemCount:
+                                          vehiclesProvider.vehicles.length,
+                                      separatorBuilder: (context, index) =>
+                                          const SizedBox(height: 10),
+                                      itemBuilder: (context, index) {
+                                        final vehicle =
+                                            vehiclesProvider.vehicles[index];
+                                        return _buildVehicleCard(vehicle);
+                                      },
+                                    ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -266,9 +270,9 @@ class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
                   borderRadius: BorderRadius.circular(30),
                   boxShadow: const [
                     BoxShadow(
-                      color: Color(0x26000000), // Color literal is const implicitly
+                      color: Color(0x26000000),
                       blurRadius: 10,
-                      offset: const Offset(0, 4), // Added const
+                      offset: Offset(0, 4),
                       spreadRadius: 0,
                     )
                   ],
@@ -310,12 +314,12 @@ class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
     return Container(
       width: 400,
       height: 59,
-      decoration: ShapeDecoration( // Restored decoration
+      decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
           side: BorderSide(
             width: 1,
-            color: const Color(0xFFEAEAEA), // Added const back to Color
+            color: const Color(0xFFEAEAEA),
           ),
           borderRadius: BorderRadius.circular(10),
         ),
@@ -333,9 +337,9 @@ class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                Icons.local_shipping,
-                color: Colors.grey.shade600,
-                size: 16,
+                Icons.local_shipping_outlined,
+                color: Color(0xFF268BB8),
+                size: 26,
               ),
             ),
           ),
@@ -349,12 +353,12 @@ class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
             children: [
               Text(
                 vehicle.plateNumber,
-                style: TextStyle( // Restored style
-                  color: const Color(0xFF474747),
+                style: const TextStyle(
+                  color: Color(0xFF474747),
                   fontSize: 17,
                   fontFamily: 'Manrope',
                   fontWeight: FontWeight.w600,
-                  height: 1.41, // Restored height
+                  height: 1.41,
                 ),
               ),
             ],
@@ -368,8 +372,8 @@ class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
             child: Text(
               '${vehicle.modelYear} - ${vehicle.fullName}',
               textAlign: TextAlign.right,
-              style: TextStyle( // Restored second style
-                color: const Color(0xFFBCBEC2),
+              style: const TextStyle(
+                color: Color(0xFFBCBEC2),
                 fontSize: 13,
                 fontFamily: 'Manrope',
                 fontWeight: FontWeight.w600,
@@ -428,8 +432,8 @@ class _AdminVehiclesScreenState extends State<AdminVehiclesScreen> {
           const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle( // No const here
-              color: isSelected ? Colors.white : Color(0xFFDDDDDD), // Removed const from Color
+            style: TextStyle(
+              color: isSelected ? Colors.white : const Color(0xFFDDDDDD),
               fontSize: 11,
               fontFamily: 'Manrope',
               fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
