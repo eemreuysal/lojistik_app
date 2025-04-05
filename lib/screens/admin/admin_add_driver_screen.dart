@@ -131,13 +131,7 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
               top: 67,
               child: Text(
                 'Şoför Ekle',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 22,
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w700,
-                  height: 1.09,
-                ),
+                style: AppTheme.manropeBold(22, Colors.white),
               ),
             ),
 
@@ -160,13 +154,7 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                           width: 184.79,
                           child: Text(
                             'Adı',
-                            style: TextStyle(
-                              color: const Color(0xFF878787),
-                              fontSize: 15,
-                              fontFamily: 'Manrope',
-                              fontWeight: FontWeight.w600,
-                              height: 1.60,
-                            ),
+                            style: AppTheme.manropeRegular(14, Colors.grey),
                           ),
                         ),
                       ),
@@ -198,13 +186,8 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                             },
                             decoration: InputDecoration(
                               hintText: 'Adı',
-                              hintStyle: TextStyle(
-                                color: const Color(0xFFC1C1C2),
-                                fontSize: 18,
-                                fontFamily: 'Manrope',
-                                fontWeight: FontWeight.w600,
-                                height: 1.33,
-                              ),
+                              hintStyle: AppTheme.interMedium(
+                                  14, Colors.grey.withAlpha(153)),
                               contentPadding:
                                   const EdgeInsets.symmetric(horizontal: 16),
                               border: InputBorder.none,
@@ -225,13 +208,7 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                           width: 180,
                           child: Text(
                             'Soyadı',
-                            style: TextStyle(
-                              color: const Color(0xFF878787),
-                              fontSize: 15,
-                              fontFamily: 'Manrope',
-                              fontWeight: FontWeight.w600,
-                              height: 1.60,
-                            ),
+                            style: AppTheme.manropeRegular(14, Colors.grey),
                           ),
                         ),
                       ),
@@ -263,13 +240,8 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                             },
                             decoration: InputDecoration(
                               hintText: 'Soyadı',
-                              hintStyle: TextStyle(
-                                color: const Color(0xFFC1C1C2),
-                                fontSize: 18,
-                                fontFamily: 'Manrope',
-                                fontWeight: FontWeight.w600,
-                                height: 1.33,
-                              ),
+                              hintStyle: AppTheme.interMedium(
+                                  14, Colors.grey.withAlpha(153)),
                               contentPadding:
                                   const EdgeInsets.symmetric(horizontal: 16),
                               border: InputBorder.none,
@@ -290,13 +262,7 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                           width: 180,
                           child: Text(
                             'Telefon Numarası',
-                            style: TextStyle(
-                              color: const Color(0xFF878787),
-                              fontSize: 15,
-                              fontFamily: 'Manrope',
-                              fontWeight: FontWeight.w600,
-                              height: 1.60,
-                            ),
+                            style: AppTheme.manropeRegular(14, Colors.grey),
                           ),
                         ),
                       ),
@@ -335,13 +301,8 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                             },
                             decoration: InputDecoration(
                               hintText: 'Telefon Numarası',
-                              hintStyle: TextStyle(
-                                color: const Color(0xFFC1C1C2),
-                                fontSize: 18,
-                                fontFamily: 'Manrope',
-                                fontWeight: FontWeight.w600,
-                                height: 1.33,
-                              ),
+                              hintStyle: AppTheme.interMedium(
+                                  14, Colors.grey.withAlpha(153)),
                               contentPadding:
                                   const EdgeInsets.symmetric(horizontal: 16),
                               border: InputBorder.none,
@@ -362,13 +323,7 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                           width: 180,
                           child: Text(
                             'TC Kimlik No',
-                            style: TextStyle(
-                              color: const Color(0xFF878787),
-                              fontSize: 15,
-                              fontFamily: 'Manrope',
-                              fontWeight: FontWeight.w600,
-                              height: 1.60,
-                            ),
+                            style: AppTheme.manropeRegular(14, Colors.grey),
                           ),
                         ),
                       ),
@@ -408,13 +363,8 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
                             },
                             decoration: InputDecoration(
                               hintText: 'TC Kimlik No',
-                              hintStyle: TextStyle(
-                                color: const Color(0xFFC1C1C2),
-                                fontSize: 18,
-                                fontFamily: 'Manrope',
-                                fontWeight: FontWeight.w600,
-                                height: 1.33,
-                              ),
+                              hintStyle: AppTheme.interMedium(
+                                  14, Colors.grey.withAlpha(153)),
                               contentPadding:
                                   const EdgeInsets.symmetric(horizontal: 16),
                               border: InputBorder.none,
@@ -433,62 +383,68 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
             ),
 
             // Alt butonlar (Vazgeç ve Kaydet)
-            Container(
-              alignment: Alignment.bottomCenter,
-              padding: const EdgeInsets.all(16),
-              color: Colors.white,
-              child: Row(
-                children: [
-                  // Vazgeç butonu
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppTheme.textDark,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        side:
-                            BorderSide(color: AppTheme.textGrey.withAlpha(128)),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+            Positioned(
+              left: 0,
+              bottom: 0,
+              child: Container(
+                width: 430,
+                padding: const EdgeInsets.all(16),
+                color: Colors.white,
+                child: Row(
+                  children: [
+                    // Vazgeç butonu
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => Navigator.pop(context),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppTheme.textDark,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          side: BorderSide(
+                              color: AppTheme.textGrey.withAlpha(128)),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        'Vazgeç',
-                        style: AppTheme.manropeSemiBold(14),
+                        child: Text(
+                          'Vazgeç',
+                          style: AppTheme.manropeSemiBold(14),
+                        ),
                       ),
                     ),
-                  ),
 
-                  const SizedBox(width: 16),
+                    const SizedBox(width: 16),
 
-                  // Kaydet butonu
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: driversProvider.isLoading ? null : _saveDriver,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryDark,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                    // Kaydet butonu
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed:
+                            driversProvider.isLoading ? null : _saveDriver,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppTheme.primaryDark,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
-                      ),
-                      child: driversProvider.isLoading
-                          ? const SizedBox(
-                              width: 20,
-                              height: 20,
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
+                        child: driversProvider.isLoading
+                            ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text(
+                                'Kaydet',
+                                style:
+                                    AppTheme.manropeSemiBold(14, Colors.white),
                               ),
-                            )
-                          : Text(
-                              'Kaydet',
-                              style: AppTheme.manropeSemiBold(14, Colors.white),
-                            ),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

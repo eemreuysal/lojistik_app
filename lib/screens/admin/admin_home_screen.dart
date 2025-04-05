@@ -578,7 +578,15 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
                     _buildNavItem(
                         icon: Icons.route,
                         label: 'Seferler',
-                        isSelected: false),
+                        isSelected: false,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AdminTruckScreen(),
+                            ),
+                          );
+                        }),
                     _buildNavItem(
                         icon: Icons.account_box_outlined,
                         label: 'Hesabım',
@@ -721,26 +729,30 @@ class _AdminHomeScreenState extends State<AdminHomeScreen> {
     required IconData icon,
     required String label,
     required bool isSelected,
+    VoidCallback? onTap,
   }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          color: isSelected ? Colors.white : const Color(0xFFDDDDDD),
-          size: 24,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            icon,
             color: isSelected ? Colors.white : const Color(0xFFDDDDDD),
-            fontSize: 11,
-            fontFamily: 'Manrope',
-            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            size: 24,
           ),
-        ),
-      ],
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              color: isSelected ? Colors.white : const Color(0xFFDDDDDD),
+              fontSize: 11,
+              fontFamily: 'Manrope',
+              fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
