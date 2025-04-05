@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import '../../config/theme.dart';
 import '../../providers/drivers_provider.dart';
 
 class AdminAddDriverScreen extends StatefulWidget {
@@ -431,80 +432,63 @@ class _AdminAddDriverScreenState extends State<AdminAddDriverScreen> {
               ),
             ),
 
-            // Bottom buttons
-            // Cancel button
-            Positioned(
-              left: 26,
-              top: 850,
-              child: GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                  width: 179,
-                  height: 60,
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                        width: 1,
-                        color: const Color(0xFFE0E2E3),
+            // Alt butonlar (Vazgeç ve Kaydet)
+            Container(
+              alignment: Alignment.bottomCenter,
+              padding: const EdgeInsets.all(16),
+              color: Colors.white,
+              child: Row(
+                children: [
+                  // Vazgeç butonu
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: AppTheme.textDark,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        side:
+                            BorderSide(color: AppTheme.textGrey.withAlpha(128)),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Vazgeç',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: const Color(0xFF474747),
-                        fontSize: 18,
-                        fontFamily: 'Manrope',
-                        fontWeight: FontWeight.w600,
-                        height: 1.33,
+                      child: Text(
+                        'Vazgeç',
+                        style: AppTheme.manropeSemiBold(14),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ),
 
-            // Save button
-            Positioned(
-              left: 225,
-              top: 850,
-              child: GestureDetector(
-                onTap: driversProvider.isLoading ? null : _saveDriver,
-                child: Container(
-                  width: 179,
-                  height: 60,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment(0.00, 0.00),
-                      end: Alignment(1.00, 1.00),
-                      colors: [
-                        const Color(0xFF06263E),
-                        const Color(0xFF10344F),
-                        const Color(0xFF1E485C)
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Center(
-                    child: driversProvider.isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : Text(
-                            'Kaydet',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontFamily: 'Manrope',
-                              fontWeight: FontWeight.w600,
-                              height: 1.33,
+                  const SizedBox(width: 16),
+
+                  // Kaydet butonu
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: driversProvider.isLoading ? null : _saveDriver,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primaryDark,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      child: driversProvider.isLoading
+                          ? const SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              'Kaydet',
+                              style: AppTheme.manropeSemiBold(14, Colors.white),
                             ),
-                          ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
           ],

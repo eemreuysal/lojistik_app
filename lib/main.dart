@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// flutter_localizations eklenene kadar yoruma alalım
+// import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'config/theme.dart';
 import 'providers/auth_provider.dart';
@@ -42,6 +44,19 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         home: const AuthWrapper(), // Oturum durumuna göre yönlendirecek
         debugShowCheckedModeBanner: false,
+        // Türkçe dil desteği (paket eklendiğinde yorumu kaldırın)
+        /*
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('tr', 'TR'), // Türkçe
+          Locale('en', 'US'), // İngilizce (yedek)
+        ],
+        locale: const Locale('tr', 'TR'), // Varsayılan dil Türkçe
+        */
       ),
     );
   }
