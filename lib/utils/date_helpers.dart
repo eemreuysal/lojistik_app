@@ -3,6 +3,24 @@ import 'package:intl/intl.dart';
 import '../config/theme.dart';
 
 class DateHelpers {
+  // Yılı dikkate almadan tarih aralığı kontrolü - Basitleştirilmiş
+  static bool isDateInRangeIgnoringYear(DateTime date, DateTime rangeStart, DateTime rangeEnd) {
+    // Sadece tarihlerin gün ve ay değerlerini karşılaştır
+    final dateMonthDay = (date.month * 100) + date.day; // örn: Mart 15 = 315
+    final startMonthDay = (rangeStart.month * 100) + rangeStart.day; // örn: Mart 10 = 310
+    final endMonthDay = (rangeEnd.month * 100) + rangeEnd.day; // örn: Mart 20 = 320
+
+    // Normal durum: Başlangıç < Bitiş (aynı yıl içinde veya ocak-aralık arası değil)
+    if (startMonthDay <= endMonthDay) {
+      return dateMonthDay >= startMonthDay && dateMonthDay <= endMonthDay;
+    }
+    // Yıl geçişi durumu: Aralık-Ocak arası gibi (Başlangıç > Bitiş)
+    else {
+      // Tarih ya başlangıçtan sonra (Aralık) ya da bitişten önce (Ocak) ise aralıktadır
+      return dateMonthDay >= startMonthDay || dateMonthDay <= endMonthDay;
+    }
+  }
+
   // Tarihleri Türkçe formatta göstermek için
   static String formatTurkishDate(DateTime date) {
     final DateFormat formatter = DateFormat('dd MMMM yyyy', 'tr_TR');

@@ -104,9 +104,8 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
   void _filterTrips() {
     final tripsProvider = Provider.of<TripsProvider>(context, listen: false);
     final allTrips = tripsProvider.trips;
-    print("🔍 FİLTRELEME BAŞLIYOR: Toplam sefer sayısı: ${allTrips.length}");
-    print(
-        "🔍 Seçilen tarih aralığı: ${_startDate.toString()} - ${_endDate.toString()}");
+    logger.d("🔍 FİLTRELEME BAŞLIYOR: Toplam sefer sayısı: ${allTrips.length}");
+    logger.d("🔍 Seçilen tarih aralığı: ${DateHelpers.formatDateRange(_startDate, _endDate)}");
 
     setState(() {
       // Önce seferleri kopyalayalım
@@ -115,20 +114,18 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
       // 1. ADIM: DURUM FİLTRELEMESİ
       if (_selectedFilter == 'active') {
         tempTrips = tempTrips.where((trip) => trip.isActive).toList();
-        print("🔍 Aktif seferler filtrelendi: ${tempTrips.length} sefer kaldı");
+        logger.d("🔍 Aktif seferler filtrelendi: ${tempTrips.length} sefer kaldı");
       } else if (_selectedFilter == 'completed') {
         tempTrips = tempTrips.where((trip) => !trip.isActive).toList();
-        print(
-            "🔍 Tamamlanan seferler filtrelendi: ${tempTrips.length} sefer kaldı");
+        logger.d("🔍 Tamamlanan seferler filtrelendi: ${tempTrips.length} sefer kaldı");
       }
 
       // 2. ADIM: TARİH FİLTRELEMESİ
       if (tempTrips.isNotEmpty) {
         // Filtreleme öncesi sefer tarihlerini yazdıralım
-        print("🔍 Tarih filtrelemesi öncesi örnek sefer tarihleri:");
+        logger.d("🔍 Tarih filtrelemesi öncesi örnek sefer tarihleri:");
         for (int i = 0; i < min(3, tempTrips.length); i++) {
-          print(
-              "   - Sefer #${i + 1}: ${tempTrips[i].tripNumber}, Tarih: ${tempTrips[i].startDate}, Formatlanmış: ${tempTrips[i].formattedStartDate}");
+          logger.d("   - Sefer #${i + 1}: ${tempTrips[i].tripNumber}, Tarih: ${tempTrips[i].startDate}, Formatlanmış: ${tempTrips[i].formattedStartDate}");
         }
 
         // Önceki listeyi yedekleyelim
@@ -141,30 +138,26 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
 
           // Tarih elde edemedik, bu seferi listede tutalım
           if (tripDate == null) {
-            print(
-                "⚠️ Tarih çözülemedi: ${trip.tripNumber} - ${trip.startDate}");
+            logger.w("⚠️ Tarih çözülemedi: ${trip.tripNumber} - ${trip.startDate}");
             return true;
           }
 
           // Tarih karşılaştırma - Sadece ay ve gün dikkate alınarak
           final bool inRange =
-              _isDateInRangeIgnoringYear(tripDate, _startDate, _endDate);
+              DateHelpers.isDateInRangeIgnoringYear(tripDate, _startDate, _endDate);
 
           if (!inRange) {
-            print(
-                "❌ Tarih aralık dışı: ${trip.tripNumber}, Tarih: $tripDate (${_startDate} - ${_endDate})");
+            logger.d("❌ Tarih aralık dışı: ${trip.tripNumber}, Tarih: $tripDate (${_startDate} - ${_endDate})");
           }
 
           return inRange;
         }).toList();
 
-        print(
-            "🔍 Tarih filtrelemesi sonrası: ${tempTrips.length} sefer kaldı (önceki: ${beforeDateFilter.length})");
+        logger.d("🔍 Tarih filtrelemesi sonrası: ${tempTrips.length} sefer kaldı (önceki: ${beforeDateFilter.length})");
 
         // Eğer filtreleme sonucu boşsa ve ana filtremiz 'all' ise, sonuçları koruyalım
         if (tempTrips.isEmpty && _selectedFilter == 'all') {
-          print(
-              "⚠️ Tarih filtrelemesi tüm seferleri eledi, tüm seferler gösteriliyor");
+          logger.w("⚠️ Tarih filtrelemesi tüm seferleri eledi, tüm seferler gösteriliyor");
           tempTrips = beforeDateFilter;
         }
       }
@@ -181,8 +174,7 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
               (trip.driverName?.toLowerCase().contains(searchTerm) ?? false);
         }).toList();
 
-        print(
-            "🔍 Arama filtresi sonrası: ${tempTrips.length} sefer kaldı (önceki: $beforeSearchFilter)");
+        logger.d("🔍 Arama filtresi sonrası: ${tempTrips.length} sefer kaldı (önceki: $beforeSearchFilter)");
       }
 
       // Sonuçları atayalım ve devam edenleri önce gösterelim
@@ -198,75 +190,13 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
         return b.createdAt.compareTo(a.createdAt);
       });
       
-      print(
-          "✅ Filtreleme tamamlandı: ${_filteredTrips.length} sefer gösteriliyor");
+      logger.d("✅ Filtreleme tamamlandı: ${_filteredTrips.length} sefer gösteriliyor");
     });
   }
 
-  // Sefer tarihini çözümleme - date parsing için yardımcı fonksiyon
+  // Sefer tarihini çözümleme - DateHelpers ile yapılıyor
   DateTime? _parseTripDate(Trip trip) {
-    // 1. ADIM: Formatlanmış tarihi deneyelim (dd.MM.yyyy)
-    try {
-      final formattedDate = trip.formattedStartDate;
-      if (formattedDate != null && formattedDate.isNotEmpty) {
-        final parts = formattedDate.split('.');
-        if (parts.length == 3) {
-          return DateTime(
-              int.parse(parts[2]), // yıl
-              int.parse(parts[1]), // ay
-              int.parse(parts[0]) // gün
-              );
-        }
-      }
-    } catch (e) {
-      // Sessizce devam et, diğer formatları deneyelim
-    }
-
-    // 2. ADIM: ISO formatını deneyelim (yyyy-MM-dd)
-    try {
-      if (trip.startDate != null && trip.startDate.isNotEmpty) {
-        if (trip.startDate.contains('-')) {
-          return DateTime.parse(trip.startDate);
-        }
-      }
-    } catch (e) {
-      // Sessizce devam et, diğer formatları deneyelim
-    }
-
-    // 3. ADIM: Noktalı formatı deneyelim (dd.MM.yyyy)
-    try {
-      if (trip.startDate != null && trip.startDate.contains('.')) {
-        final parts = trip.startDate.split('.');
-        if (parts.length == 3) {
-          return DateTime(
-              int.parse(parts[2]), // yıl
-              int.parse(parts[1]), // ay
-              int.parse(parts[0]) // gün
-              );
-        }
-      }
-    } catch (e) {
-      // Sessizce devam et, diğer formatları deneyelim
-    }
-
-    // 4. ADIM: Eğik çizgili formatı deneyelim (dd/MM/yyyy)
-    try {
-      if (trip.startDate != null && trip.startDate.contains('/')) {
-        final parts = trip.startDate.split('/');
-        if (parts.length == 3) {
-          return DateTime(
-              int.parse(parts[2]), // yıl
-              int.parse(parts[1]), // ay
-              int.parse(parts[0]) // gün
-              );
-        }
-      }
-    } catch (e) {
-      // Sessizce devam et
-    }
-
-    // Hiçbir format uymadı
-    return null;
+    return DateHelpers.parseDate(trip.startDate);
   }
 
   // Show date range picker - DateHelpers ile geliştirilmiş
@@ -329,66 +259,11 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
     }
   }
 
-  // Check if the selected date range is current week
-  bool _isCurrentWeek(DateTime start, DateTime end) {
-    final now = DateTime.now();
-    final currentWeekStart = now.subtract(Duration(days: now.weekday - 1));
-    final currentWeekEnd = currentWeekStart.add(const Duration(days: 6));
+  // Kaldırıldı - DateHelpers sınıfı içerisindeki metodlar kullanılıyor
+  // isCurrentWeek ve isCurrentMonth
 
-    return start.year == currentWeekStart.year &&
-        start.month == currentWeekStart.month &&
-        start.day == currentWeekStart.day &&
-        end.year == currentWeekEnd.year &&
-        end.month == currentWeekEnd.month &&
-        end.day == currentWeekEnd.day;
-  }
-
-  // Check if the selected date range is current month
-  bool _isCurrentMonth(DateTime start, DateTime end) {
-    final now = DateTime.now();
-    final currentMonthStart = DateTime(now.year, now.month, 1);
-    final currentMonthEnd =
-        DateTime(now.year, now.month + 1, 0); // Last day of month
-
-    return start.year == currentMonthStart.year &&
-        start.month == currentMonthStart.month &&
-        start.day == currentMonthStart.day &&
-        end.year == currentMonthEnd.year &&
-        end.month == currentMonthEnd.month &&
-        end.day == currentMonthEnd.day;
-  }
-
-  // Yılı dikkate almadan tarih aralığı kontrolü - Basitleştirilmiş
-  bool _isDateInRangeIgnoringYear(
-      DateTime date, DateTime rangeStart, DateTime rangeEnd) {
-    // Sadece tarihlerin gün ve ay değerlerini karşılaştır
-    final dateMonthDay = (date.month * 100) + date.day; // örn: Mart 15 = 315
-    final startMonthDay =
-        (rangeStart.month * 100) + rangeStart.day; // örn: Mart 10 = 310
-    final endMonthDay =
-        (rangeEnd.month * 100) + rangeEnd.day; // örn: Mart 20 = 320
-
-    print(
-        "📅 Ay-Gün Kontrolü: Sefer ${date.day}/${date.month} ---- Aralık ${rangeStart.day}/${rangeStart.month} - ${rangeEnd.day}/${rangeEnd.month}");
-    print(
-        "📅 Ay-Gün Değerleri: Sefer $dateMonthDay ---- Aralık $startMonthDay - $endMonthDay");
-
-    // Normal durum: Başlangıç < Bitiş (aynı yıl içinde veya ocak-aralık arası değil)
-    if (startMonthDay <= endMonthDay) {
-      final inRange =
-          dateMonthDay >= startMonthDay && dateMonthDay <= endMonthDay;
-      print("📅 Normal Aralık Kontrolü: $inRange");
-      return inRange;
-    }
-    // Yıl geçişi durumu: Aralık-Ocak arası gibi (Başlangıç > Bitiş)
-    else {
-      // Tarih ya başlangıçtan sonra (Aralık) ya da bitişten önce (Ocak) ise aralıktadır
-      final inRange =
-          dateMonthDay >= startMonthDay || dateMonthDay <= endMonthDay;
-      print("📅 Yıl Geçişi Aralık Kontrolü: $inRange");
-      return inRange;
-    }
-  }
+  // Kaldırıldı - DateHelpers sınıfı içerisindeki metod kullanılıyor
+  // isDateInRangeIgnoringYear
 
   @override
   Widget build(BuildContext context) {

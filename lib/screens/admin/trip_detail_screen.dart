@@ -40,15 +40,11 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
       return 'Belirlenmedi';
     }
     
-    try {
-      final date = DateHelpers.parseDate(dateStr);
-      if (date != null) {
-        return DateHelpers.formatTurkishDate(date);
-      } else {
-        return dateStr;
-      }
-    } catch (e) {
-      logger.e("Tarih format hatası: $e");
+    final date = DateHelpers.parseDate(dateStr);
+    if (date != null) {
+      return DateHelpers.formatTurkishDate(date);
+    } else {
+      logger.d("Tarih ayrıştırılamadı: $dateStr");
       return dateStr; // Tarih ayrıştırılamazsa orijinal değeri döndür
     }
   }
@@ -485,7 +481,10 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
       case 3: // Teslimata yakın - başlangıçtan 3 gün sonra
         return DateHelpers.formatTurkishDate(startDate.add(const Duration(days: 3)));
       case 4: // Teslim edildi - bitiş tarihi
-        return formatTurkishDate(widget.trip.endDate);
+        final endDate = DateHelpers.parseDate(widget.trip.endDate);
+        return endDate != null 
+            ? DateHelpers.formatTurkishDate(endDate)
+            : 'Belirlenmedi';
       default:
         return 'Bekliyor';
     }

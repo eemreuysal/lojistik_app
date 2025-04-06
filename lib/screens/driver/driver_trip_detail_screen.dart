@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../config/theme.dart';
 import '../../models/trip_model.dart';
+import '../../utils/date_helpers.dart';
+import '../../utils/logger.dart';
 
 class DriverTripDetailScreen extends StatefulWidget {
   final Trip trip;
@@ -17,6 +19,12 @@ class DriverTripDetailScreen extends StatefulWidget {
 
 class _DriverTripDetailScreenState extends State<DriverTripDetailScreen> {
   bool _isLoading = false;
+  
+  @override
+  void initState() {
+    super.initState();
+    logger.d("Driver Sefer detay ekranı açıldı: ${widget.trip.tripNumber}");
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -122,7 +130,7 @@ class _DriverTripDetailScreenState extends State<DriverTripDetailScreen> {
                               icon: Icons.calendar_today,
                               title: "Bitiş Tarihi",
                               value: widget.trip.endDate != null
-                                  ? DateFormat('dd.MM.yyyy').format(DateTime.parse(widget.trip.endDate!))
+                                  ? DateHelpers.formatTurkishDate(DateHelpers.parseDate(widget.trip.endDate) ?? DateTime.now())
                                   : 'Belirtilmemiş',
                             ),
                             
@@ -500,16 +508,23 @@ class _DriverTripDetailScreenState extends State<DriverTripDetailScreen> {
       _isLoading = true;
     });
     
+    logger.i("Sefer durumu güncelleniyor: ${widget.trip.id} -> $status");
+    
     // Not: API'ye durum güncellemesi gönderilecek
     // Mock durum güncellemesi - normalde API'ye gönderilecek
     Future.delayed(const Duration(seconds: 1), () {
       // Widget ağaçtan çıkarılmışsa (örneğin sayfa değiştirilmişse)
       // setState çağrılmamallama
-      if (!mounted) return;
+      if (!mounted) {
+        logger.w("Widget mounted değil, işlem iptal edildi");
+        return;
+      }
       
       setState(() {
         _isLoading = false;
       });
+      
+      logger.i("Sefer durumu başarıyla güncellendi");
       
       // Başarılı bildirim göster - mounted kontrolden sonra
       ScaffoldMessenger.of(context).showSnackBar(
