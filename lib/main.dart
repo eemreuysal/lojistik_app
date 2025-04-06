@@ -13,7 +13,6 @@ import 'screens/login_screen.dart';
 import 'screens/admin/admin_home_screen.dart';
 import 'screens/driver/driver_home_screen.dart';
 import 'screens/splash_screen.dart';
-import 'utils/logger.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

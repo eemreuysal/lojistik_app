@@ -11,7 +11,7 @@ class AppLogger {
       lineLength: 120, // Satır uzunluğu
       colors: true, // Renkli log çıktısı
       printEmojis: true, // Emojiler kullan
-      printTime: true, // Zaman göster
+      dateTimeFormat: DateTimeFormat.onlyTimeAndSinceStart, // Zaman göster
     ),
   );
 

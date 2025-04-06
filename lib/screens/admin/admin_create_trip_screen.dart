@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../config/theme.dart';
 
 class AdminCreateTripScreen extends StatefulWidget {
   const AdminCreateTripScreen({super.key});
@@ -21,9 +22,8 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
 
   List<DropdownMenuItem<int>> _vehicleItems = [];
   List<DropdownMenuItem<int>> _driverItems = [];
-  List<DropdownMenuItem<int>> _customerItems = [];
 
-  final bool _isLoading = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -37,11 +37,6 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
     _driverItems = [
       const DropdownMenuItem(value: 1, child: Text('Ahmet Yılmaz')),
       const DropdownMenuItem(value: 2, child: Text('Mehmet Öztürk')),
-    ];
-
-    _customerItems = [
-      const DropdownMenuItem(value: 1, child: Text('ABC Şirketi')),
-      const DropdownMenuItem(value: 2, child: Text('XYZ Şirketi')),
     ];
   }
 
@@ -75,25 +70,59 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
     }
   }
 
-  void _submitForm() {
+  Future<void> _submitForm() async {
     if (_formKey.currentState!.validate()) {
-      // Form is valid, submit data
-      // API entegrasyonu için veri hazırlanıyor:
-      Map<String, dynamic> tripData = {
-        'start_date': DateFormat('yyyy-MM-dd').format(_startDate!),
-        'end_date': _endDate != null
-            ? DateFormat('yyyy-MM-dd').format(_endDate!)
-            : null,
-        'vehicle': _selectedVehicleId,
-        'driver': _selectedDriverId,
-        'customer': _selectedCustomerId,
-      };
+      setState(() {
+        _isLoading = true;
+      });
 
-      // Not: API üzerinden kaydet - tripData gönderilecek
-      debugPrint('Gönderilecek veri: $tripData'); // Debug için
+      try {
+        // API entegrasyonu için veri hazırlanıyor:
+        Map<String, dynamic> tripData = {
+          'start_date': DateFormat('yyyy-MM-dd').format(_startDate!),
+          'end_date': _endDate != null
+              ? DateFormat('yyyy-MM-dd').format(_endDate!)
+              : null,
+          'vehicle': _selectedVehicleId,
+          'driver': _selectedDriverId,
+          'customer': _selectedCustomerId,
+        };
 
-      // Go back to previous screen
-      Navigator.pop(context);
+        // Yapay gecikme (API entegrasyonu için kaldırılacak)
+        await Future.delayed(const Duration(milliseconds: 800));
+        
+        // Not: API üzerinden kaydet - tripData gönderilecek
+        debugPrint('Gönderilecek veri: $tripData'); // Debug için
+
+        if (mounted) {
+          // Başarı mesajı göster
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Sefer başarıyla oluşturuldu'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          
+          // Önceki ekrana dön
+          Navigator.pop(context);
+        }
+      } catch (e) {
+        // Hata durumunda
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Sefer oluşturulurken hata: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      }
     }
   }
 
@@ -211,12 +240,15 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                                   shape: RoundedRectangleBorder(
                                     side: const BorderSide(
                                       width: 1,
-                                      color: Color(0xFFDFE2E3),
+                                      color: Color(0xFFE0E2E3),
                                     ),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                                 child: DropdownButtonFormField<int>(
+                                  icon: Icon(
+                                      Icons.keyboard_arrow_down), // Özel ikon
+                                  iconSize: 24, // İkon boyutu
                                   value: _selectedVehicleId,
                                   decoration: const InputDecoration(
                                     contentPadding:
@@ -228,6 +260,7 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                                       fontSize: 18,
                                       fontFamily: 'Manrope',
                                       fontWeight: FontWeight.w600,
+                                      height: 1.33,
                                     ),
                                   ),
                                   items: _vehicleItems,
@@ -244,7 +277,7 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                                   },
                                 ),
                               ),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 15),
 
                               // Şoför Seçimi
                               const Text(
@@ -266,12 +299,15 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                                   shape: RoundedRectangleBorder(
                                     side: const BorderSide(
                                       width: 1,
-                                      color: Color(0xFFDFE2E3),
+                                      color: Color(0xFFE0E2E3),
                                     ),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
                                 child: DropdownButtonFormField<int>(
+                                  icon: Icon(
+                                      Icons.keyboard_arrow_down), // Özel ikon
+                                  iconSize: 24, // İkon boyutu
                                   value: _selectedDriverId,
                                   decoration: const InputDecoration(
                                     contentPadding:
@@ -283,6 +319,7 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                                       fontSize: 18,
                                       fontFamily: 'Manrope',
                                       fontWeight: FontWeight.w600,
+                                      height: 1.33,
                                     ),
                                   ),
                                   items: _driverItems,
@@ -293,7 +330,7 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                                   },
                                 ),
                               ),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 15),
 
                               // Başlangıç Tarihi
                               const Text(
@@ -315,7 +352,7 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                                   shape: RoundedRectangleBorder(
                                     side: const BorderSide(
                                       width: 1,
-                                      color: Color(0xFFDFE2E3),
+                                      color: Color(0xFFE0E2E3),
                                     ),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -332,12 +369,13 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                                       fontSize: 18,
                                       fontFamily: 'Manrope',
                                       fontWeight: FontWeight.w600,
+                                      height: 1.33,
                                     ),
                                     prefixIcon: Padding(
                                       padding:
                                           EdgeInsets.only(left: 16, right: 8),
-                                      child: Icon(Icons.calendar_today,
-                                          size: 20, color: Color(0xFF474747)),
+                                      child: Icon(Icons.calendar_month,
+                                          size: 20, color: Color(0xFFC1C2C2)),
                                     ),
                                   ),
                                   readOnly: true,
@@ -350,7 +388,7 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                                   },
                                 ),
                               ),
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 15),
 
                               // Bitiş Tarihi
                               const Text(
@@ -372,7 +410,7 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                                   shape: RoundedRectangleBorder(
                                     side: const BorderSide(
                                       width: 1,
-                                      color: Color(0xFFDFE2E3),
+                                      color: Color(0xFFE0E2E3),
                                     ),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
@@ -389,12 +427,13 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                                       fontSize: 18,
                                       fontFamily: 'Manrope',
                                       fontWeight: FontWeight.w600,
+                                      height: 1.33,
                                     ),
                                     prefixIcon: Padding(
                                       padding:
                                           EdgeInsets.only(left: 16, right: 8),
-                                      child: Icon(Icons.calendar_today,
-                                          size: 20, color: Color(0xFF474747)),
+                                      child: Icon(Icons.calendar_month,
+                                          size: 20, color: Color(0xFFC1C2C2)),
                                     ),
                                   ),
                                   readOnly: true,
@@ -402,25 +441,6 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                                 ),
                               ),
                               const SizedBox(height: 20),
-
-                              // Müşteri Seçimi (saklı) - Figma'da yok ama işlevsellik için korundu
-                              Opacity(
-                                opacity: 0,
-                                child: DropdownButtonFormField<int>(
-                                  value: _selectedCustomerId,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Müşteri',
-                                    prefixIcon: Icon(Icons.business),
-                                    border: OutlineInputBorder(),
-                                  ),
-                                  items: _customerItems,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _selectedCustomerId = value;
-                                    });
-                                  },
-                                ),
-                              ),
                             ],
                           ),
                         ),
@@ -431,58 +451,58 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
                   // Bottom buttons
                   Container(
                     height: 104,
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                    ),
+                    padding: const EdgeInsets.all(16),
+                    color: Colors.white,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Vazgeç button
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text(
-                            'Vazgeç',
-                            style: TextStyle(
-                              color: Color(0xFF474747),
-                              fontSize: 18,
-                              fontFamily: 'Manrope',
-                              fontWeight: FontWeight.w600,
-                              height: 1.33,
+                        // Vazgeç butonu
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: OutlinedButton.styleFrom(
+                              foregroundColor: AppTheme.textDark,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              side: BorderSide(
+                                  color: AppTheme.textGrey.withAlpha(128)),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: Text(
+                              'Vazgeç',
+                              style: AppTheme.manropeSemiBold(14),
                             ),
                           ),
                         ),
 
-                        // Kaydet button
-                        Container(
-                          width: 152,
-                          height: 48,
-                          decoration: ShapeDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment(0.00, 0.00),
-                              end: Alignment(1.00, 1.00),
-                              colors: [
-                                Color(0xFF06263E),
-                                Color(0xFF10344F),
-                                Color(0xFF1E485C)
-                              ],
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                          ),
-                          child: TextButton(
-                            onPressed: _submitForm,
-                            child: const Text(
-                              'Kaydet',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontFamily: 'Manrope',
-                                fontWeight: FontWeight.w600,
-                                height: 1.33,
+                        const SizedBox(width: 16),
+
+                        // Kaydet butonu
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: _isLoading ? null : _submitForm,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.primaryDark,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
                               ),
                             ),
+                            child: _isLoading
+                                ? const SizedBox(
+                                    width: 20,
+                                    height: 20,
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : Text(
+                                    'Kaydet',
+                                    style:
+                                        AppTheme.manropeSemiBold(14, Colors.white),
+                                  ),
                           ),
                         ),
                       ],
@@ -495,7 +515,7 @@ class _AdminCreateTripScreenState extends State<AdminCreateTripScreen> {
             // Loading indicator
             if (_isLoading)
               Container(
-                color: Colors.black.withOpacity(0.3),
+                color: Colors.black.withAlpha(77),
                 child: const Center(
                   child: CircularProgressIndicator(),
                 ),

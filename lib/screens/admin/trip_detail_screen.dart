@@ -7,16 +7,15 @@ import '../../providers/auth_provider.dart';
 import '../../widgets/profile_image_widget.dart';
 import '../../utils/logger.dart';
 import '../../utils/date_helpers.dart';
-import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 class TripDetailScreen extends StatefulWidget {
   final Trip trip;
   
   const TripDetailScreen({
-    Key? key,
+    super.key,
     required this.trip,
-  }) : super(key: key);
+  });
 
   @override
   State<TripDetailScreen> createState() => _TripDetailScreenState();
@@ -165,8 +164,6 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   
   // Sefer başlık kartı
   Widget _buildTripHeaderCard() {
-    final isActive = widget.trip.isActive;
-    
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -196,8 +193,8 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   ),
                   const SizedBox(width: 10),
                   Icon(
-                    isActive ? Icons.local_shipping : Icons.done_all,
-                    color: isActive ? AppTheme.primary : Colors.green,
+                    widget.trip.isActive ? Icons.local_shipping : Icons.done_all,
+                    color: widget.trip.isActive ? AppTheme.primary : Colors.green,
                     size: 24,
                   ),
                 ],
@@ -207,14 +204,14 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
-                  color: isActive ? const Color(0xFFD3F0FF) : const Color(0xFFDBFFDF),
+                  color: widget.trip.isActive ? const Color(0xFFD3F0FF) : const Color(0xFFDBFFDF),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
-                  isActive ? 'Devam Ediyor' : 'Tamamlandı',
+                  widget.trip.isActive ? 'Devam Ediyor' : 'Tamamlandı',
                   style: AppTheme.manropeBold(
                     12,
-                    isActive ? const Color(0xFF2D4856) : const Color(0xFF5D8765),
+                    widget.trip.isActive ? const Color(0xFF2D4856) : const Color(0xFF5D8765),
                   ),
                 ),
               ),
@@ -345,7 +342,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
-                  Icons.directions_truck,
+                  Icons.local_shipping,
                   color: AppTheme.primaryDark,
                 ),
               ),
@@ -372,7 +369,7 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
   
   // Sefer ilerleme durumu (timeline)
   Widget _buildTimelineProgress() {
-    final isActive = widget.trip.isActive;
+    // final isActive = widget.trip.isActive; - Bu değişken zaten trip modelinde tanımlı
     final status = widget.trip.status ?? 'Devam Ediyor';
     
     // Durum sırasını belirleyelim

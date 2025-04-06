@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'dart:math'; // min() fonksiyonu için gerekli
-import 'package:intl/intl.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import '../../config/theme.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/trips_provider.dart';
@@ -125,7 +123,10 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
         // Filtreleme öncesi sefer tarihlerini yazdıralım
         logger.d("🔍 Tarih filtrelemesi öncesi örnek sefer tarihleri:");
         for (int i = 0; i < min(3, tempTrips.length); i++) {
-          logger.d("   - Sefer #${i + 1}: ${tempTrips[i].tripNumber}, Tarih: ${tempTrips[i].startDate}, Formatlanmış: ${tempTrips[i].formattedStartDate}");
+          final tripNumber = tempTrips[i].tripNumber;
+          final startDate = tempTrips[i].startDate;
+          final formattedStartDate = tempTrips[i].formattedStartDate;
+          logger.d("   - Sefer #${i + 1}: $tripNumber, Tarih: $startDate, Formatlanmış: $formattedStartDate");
         }
 
         // Önceki listeyi yedekleyelim
@@ -626,8 +627,8 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
                   const SizedBox(width: 8),
                   Text(
                     _selectedTimeFilter,
-                    style: const TextStyle(
-                      color: const Color(0xFF474747),
+                    style: TextStyle(
+                      color: Color(0xFF474747),
                       fontSize: 15,
                       fontFamily: 'Manrope',
                       fontWeight: FontWeight.w600,
@@ -788,16 +789,21 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
                   // Tarih bilgisi daha okunaklı düzende
                   Row(
                     children: [
-                      Icon(Icons.calendar_month, size: 16, color: Color(0xFFBCBEC2)),
+                      const Icon(Icons.calendar_month, size: 16, color: Color(0xFFBCBEC2)),
                       const SizedBox(width: 4),
                       Text(
                         trip.formattedStartDate,
                         style: AppTheme.manropeSemiBold(13, const Color(0xFFBCBEC2)),
                       ),
-                      Text(
-                        ' ${trip.createdAt.hour}:${trip.createdAt.minute.toString().padLeft(2, '0')}',
-                        style: AppTheme.manropeSemiBold(13, const Color(0xFFBCBEC2)),
-                      ),
+                      // Saat ve dakikayı önceden değişkenlere atayarak süslü parantez sorununu çözüyoruz
+                      Builder(builder: (context) {
+                        final hour = trip.createdAt.hour;
+                        final minute = trip.createdAt.minute.toString().padLeft(2, '0');
+                        return Text(
+                          ' $hour:$minute',
+                          style: AppTheme.manropeSemiBold(13, const Color(0xFFBCBEC2)),
+                        );
+                      }),
                     ],
                   ),
 
@@ -806,14 +812,14 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
                   // Araç ve sürücü bilgisi
                   Row(
                     children: [
-                      Icon(Icons.directions_car, size: 16, color: Color(0xFF838383)),
+                      const Icon(Icons.directions_car, size: 16, color: Color(0xFF838383)),
                       const SizedBox(width: 4),
                       Text(
                         trip.vehiclePlate ?? "Plaka yok",
                         style: AppTheme.manropeSemiBold(13, const Color(0xFF838383)),
                       ),
                       const SizedBox(width: 12),
-                      Icon(Icons.person, size: 16, color: Color(0xFF838383)),
+                      const Icon(Icons.person, size: 16, color: Color(0xFF838383)),
                       const SizedBox(width: 4),
                       Text(
                         trip.driverName ?? "Sürücü atanmadı",

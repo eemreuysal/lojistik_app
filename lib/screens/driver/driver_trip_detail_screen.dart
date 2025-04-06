@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import '../../config/theme.dart';
 import '../../models/trip_model.dart';
-import '../../utils/date_helpers.dart';
 import '../../utils/logger.dart';
+import '../../utils/date_helpers.dart';
 
 class DriverTripDetailScreen extends StatefulWidget {
   final Trip trip;
