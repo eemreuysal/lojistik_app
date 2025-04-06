@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-// flutter_localizations eklenene kadar yoruma alalım
-// import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'config/theme.dart';
 import 'providers/auth_provider.dart';
@@ -13,9 +13,13 @@ import 'screens/login_screen.dart';
 import 'screens/admin/admin_home_screen.dart';
 import 'screens/driver/driver_home_screen.dart';
 import 'screens/splash_screen.dart';
+import 'utils/logger.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Türkçe tarih formatı için dil desteğini başlat
+  initializeDateFormatting('tr_TR', null);
   
   // Durum çubuğu görünümünü ayarla
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -44,9 +48,8 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.lightTheme,
         home: const AuthWrapper(), // Oturum durumuna göre yönlendirecek
         debugShowCheckedModeBanner: false,
-        // Türkçe dil desteği (paket eklendiğinde yorumu kaldırın)
-        /*
-        localizationsDelegates: [
+        // Türkçe dil desteği
+        localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
           GlobalCupertinoLocalizations.delegate,
@@ -56,7 +59,6 @@ class MyApp extends StatelessWidget {
           Locale('en', 'US'), // İngilizce (yedek)
         ],
         locale: const Locale('tr', 'TR'), // Varsayılan dil Türkçe
-        */
       ),
     );
   }

@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class Trip {
   final int id;
@@ -54,9 +55,46 @@ class Trip {
     };
   }
 
-  // Tarih görüntüleme için yardımcı metod
+  // Tarih görüntüleme için yardımcı metod - Türkçe
   String get formattedStartDate {
-    return DateFormat('dd.MM.yyyy').format(DateTime.parse(startDate));
+    try {
+      // Dil desteğini başlat
+      initializeDateFormatting('tr_TR', null);
+      
+      // Türkçe tarih formatı
+      return DateFormat('dd MMMM yyyy', 'tr_TR').format(DateTime.parse(startDate));
+    } catch (e) {
+      // Hata durumunda orijinal tarih değerini dön
+      return startDate;
+    }
+  }
+
+  // Kısa tarih formatı (gün ve ay)
+  String get shortFormattedStartDate {
+    try {
+      // Dil desteğini başlat
+      initializeDateFormatting('tr_TR', null);
+      
+      // Kısa Türkçe tarih formatı
+      return DateFormat('dd MMM', 'tr_TR').format(DateTime.parse(startDate));
+    } catch (e) {
+      // Hata durumunda orijinal tarih değerini dön
+      return startDate;
+    }
+  }
+
+  // Sefer oluşturma tarihi için Türkçe format
+  String get formattedCreationDate {
+    try {
+      // Dil desteğini başlat
+      initializeDateFormatting('tr_TR', null);
+      
+      // Saat ve tarih formatı - Örnek: 15 Ocak 2024, 14:30
+      return DateFormat('dd MMMM yyyy, HH:mm', 'tr_TR').format(createdAt);
+    } catch (e) {
+      // Hata durumunda saati basit formatta göster
+      return '${createdAt.hour}:${createdAt.minute.toString().padLeft(2, '0')}';
+    }
   }
 
   // Sefer numarasını döndüren yardımcı metod

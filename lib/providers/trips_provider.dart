@@ -27,8 +27,15 @@ class TripsProvider extends ChangeNotifier {
           .map<Trip>((json) => Trip.fromJson(json))
           .toList();
       
-      // Tarihe göre sırala (en yeniden en eskiye)
-      _trips.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+      // Önce duruma göre sırala (devam edenler önce), sonra tarihe göre (en yeniden en eskiye)
+      _trips.sort((a, b) {
+        // Önce durum karşılaştırması (devam edenler önce)
+        if (a.isActive && !b.isActive) return -1; // a devam ediyor, b tamamlanmış -> a önce
+        if (!a.isActive && b.isActive) return 1;  // a tamamlanmış, b devam ediyor -> b önce
+        
+        // Eğer iki sefer de aynı durumdaysa, tarihe göre sırala (en yeniden en eskiye)
+        return b.createdAt.compareTo(a.createdAt);
+      });
       
       _applySearch();
     } catch (e) {
