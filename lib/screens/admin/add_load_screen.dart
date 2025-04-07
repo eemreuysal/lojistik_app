@@ -113,15 +113,19 @@ class _AddLoadScreenState extends State<AddLoadScreen> {
 
         // Yeni load nesnesi oluştur
         final newLoad = Load(
-          customerId: customerId,
+          id: DateTime.now().millisecondsSinceEpoch,
+          name: _loadNameController.text,
+          description: _loadNameController.text,
+          weight: 0.0,
+          type: 'Genel Kargo',
+          customerId: int.tryParse(customerId ?? '0'),
           customerName: _customerNameController.text,
           phoneNumber: _phoneNumberController.text,
           email: _emailController.text,
-          name: _loadNameController.text,
           quantity: double.tryParse(_quantityController.text) ?? 0.0,
           unit: unit,
-          loadingDate: loadingDate,
-          deliveryDate: deliveryDate,
+          loadingDate: loadingDate?.toIso8601String(),
+          deliveryDate: deliveryDate?.toIso8601String(),
           price: double.tryParse(_priceController.text) ?? 0.0,
         );
 

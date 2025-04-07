@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter/rendering.dart';
 
 import '../../config/theme.dart';
 import '../../models/load_model.dart';
@@ -9,6 +10,7 @@ import '../../providers/trips_provider.dart';
 import '../../utils/logger.dart';
 import '../../utils/date_helpers.dart';
 import '../admin/add_load_screen.dart';
+import '../admin/load_detail_screen.dart';
 
 class TripDetailScreen extends StatefulWidget {
   final Trip trip;
@@ -203,6 +205,9 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
           startLocation: 'Gediz, Kütahya',
           endLocation: 'Pozantı,Adana',
           loadPoint: 3,
+          description: 'Mermer fayans yükü',
+          weight: 24.5,
+          type: 'Yapı Malzemesi',
         ),
         Load(
           id: 2,
@@ -212,6 +217,9 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
           startLocation: 'Gediz, Kütahya',
           endLocation: 'Pozantı,Adana',
           loadPoint: 3,
+          description: 'Mermer fayans yükü',
+          weight: 24.5,
+          type: 'Yapı Malzemesi',
         )
       ];
       return demoLoads[index];
@@ -723,162 +731,177 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
 
   // Yük kartı widget'ı - iyileştirilmiş tasarım
   Widget _buildLoadCard(Load load) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      width: double.infinity, // Esnek genişlik
-      decoration: ShapeDecoration(
-        color: Colors.white,
-        shape: RoundedRectangleBorder(
-          side: const BorderSide(
-            width: 1,
-            color: Color(0xFFEAEAEA),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LoadDetailScreen(
+              load: load,
+              tripNumber: widget.trip.tripNumber,
+              vehiclePlate: widget.trip.vehiclePlate ?? '43 SB 076',
+            ),
           ),
-          borderRadius: BorderRadius.circular(10),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        width: double.infinity, // Esnek genişlik
+        decoration: ShapeDecoration(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(
+            side: const BorderSide(
+              width: 1,
+              color: Color(0xFFEAEAEA),
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          shadows: const [
+            BoxShadow(
+              color: Color(0x0D000000), // %5 saydamlık
+              blurRadius: 4,
+              offset: Offset(0, 2),
+              spreadRadius: 0,
+            ),
+          ],
         ),
-        shadows: const [
-          BoxShadow(
-            color: Color(0x0D000000), // %5 saydamlık
-            blurRadius: 4,
-            offset: Offset(0, 2),
-            spreadRadius: 0,
-          ),
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min, // İçeriğe göre boyutlandırma
-          children: [
-            // Ürün ismi ve fiyat - üst satır
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Ürün ismi - Taşma kontrolü ekledik
-                Expanded(
-                  flex: 3,
-                  child: Text(
-                    load.name ?? 'Paletli Mermer Fayans',
-                    style: const TextStyle(
-                      color: Color(0xFF474747),
-                      fontSize: 18,
-                      fontFamily: 'Manrope',
-                      fontWeight: FontWeight.w700,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 2,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                // Tutar - Taşma kontrolü ekledik
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    '${load.price?.toStringAsFixed(0) ?? '14.412'}₺',
-                    textAlign: TextAlign.right,
-                    style: const TextStyle(
-                      color: Color(0xFF474747),
-                      fontSize: 18,
-                      fontFamily: 'Manrope',
-                      fontWeight: FontWeight.w600,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 8),
-
-            // Müşteri - Taşma kontrolü ekledik
-            Text(
-              load.customerName ?? 'Gediz Ekol Madencilik',
-              style: const TextStyle(
-                color: Color(0xFF898A8A),
-                fontSize: 15,
-                fontFamily: 'Manrope',
-                fontWeight: FontWeight.w600,
-              ),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-            
-            const SizedBox(height: 4),
-
-            // Konum satırı - Taşma kontrolü ekledik
-            Row(
-              children: [
-                // Başlangıç lokasyonu ikonu
-                const Icon(
-                  Icons.location_on_outlined,
-                  color: Color(0xFFBCBEC2),
-                  size: 16,
-                ),
-                const SizedBox(width: 4),
-                // Konum metni
-                Expanded(
-                  child: Text(
-                    '${load.startLocation ?? 'Gediz, Kütahya'} > ${load.endLocation ?? 'Pozantı, Adana'}',
-                    style: const TextStyle(
-                      color: Color(0xFFBCBEC2),
-                      fontSize: 13,
-                      fontFamily: 'Manrope',
-                      fontWeight: FontWeight.w600,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 10),
-
-            // Yükleme noktası butonu - Daha modern görünüm
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              decoration: BoxDecoration(
-                color: const Color(0xFFF8F9FA),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: const Color(0xFFE0E2E3)),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min, // İçeriğe göre boyutlandırma
+            children: [
+              // Ürün ismi ve fiyat - üst satır
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Sayı dairesi
-                  Container(
-                    width: 20,
-                    height: 20,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF06263E),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Center(
-                      child: Text(
-                        '${load.loadPoint ?? 3}',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontFamily: 'Manrope',
-                          fontWeight: FontWeight.w600,
-                        ),
+                  // Ürün ismi - Taşma kontrolü ekledik
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      load.name ?? 'Paletli Mermer Fayans',
+                      style: const TextStyle(
+                        color: Color(0xFF474747),
+                        fontSize: 18,
+                        fontFamily: 'Manrope',
+                        fontWeight: FontWeight.w700,
                       ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                     ),
                   ),
                   const SizedBox(width: 8),
-                  // Yükleme noktası metni
-                  const Text(
-                    'Yükleme Noktası',
-                    style: TextStyle(
-                      color: Color(0xFF474747),
-                      fontSize: 13,
-                      fontFamily: 'Manrope',
-                      fontWeight: FontWeight.w600,
+                  // Tutar - Taşma kontrolü ekledik
+                  Expanded(
+                    flex: 1,
+                    child: Text(
+                      '${load.price?.toStringAsFixed(0) ?? '14.412'}₺',
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        color: Color(0xFF474747),
+                        fontSize: 18,
+                        fontFamily: 'Manrope',
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
               ),
-            ),
-          ],
+
+              const SizedBox(height: 8),
+
+              // Müşteri - Taşma kontrolü ekledik
+              Text(
+                load.customerName ?? 'Gediz Ekol Madencilik',
+                style: const TextStyle(
+                  color: Color(0xFF898A8A),
+                  fontSize: 15,
+                  fontFamily: 'Manrope',
+                  fontWeight: FontWeight.w600,
+                ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+
+              const SizedBox(height: 4),
+
+              // Konum satırı - Taşma kontrolü ekledik
+              Row(
+                children: [
+                  // Başlangıç lokasyonu ikonu
+                  const Icon(
+                    Icons.location_on_outlined,
+                    color: Color(0xFFBCBEC2),
+                    size: 16,
+                  ),
+                  const SizedBox(width: 4),
+                  // Konum metni
+                  Expanded(
+                    child: Text(
+                      '${load.startLocation ?? 'Gediz, Kütahya'} > ${load.endLocation ?? 'Pozantı, Adana'}',
+                      style: const TextStyle(
+                        color: Color(0xFFBCBEC2),
+                        fontSize: 13,
+                        fontFamily: 'Manrope',
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 10),
+
+              // Yükleme noktası butonu - Daha modern görünüm
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF8F9FA),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: const Color(0xFFE0E2E3)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Sayı dairesi
+                    Container(
+                      width: 20,
+                      height: 20,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF06263E),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          '${load.loadPoint ?? 3}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontFamily: 'Manrope',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    // Yükleme noktası metni
+                    const Text(
+                      'Yükleme Noktası',
+                      style: TextStyle(
+                        color: Color(0xFF474747),
+                        fontSize: 13,
+                        fontFamily: 'Manrope',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

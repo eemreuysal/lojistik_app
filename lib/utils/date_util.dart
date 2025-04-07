@@ -1,0 +1,206 @@
+import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+
+class DateUtil {
+  // Tarih formatı başlatma için yardımcı metod
+  static void setupDateFormatting() {
+    // Türkçe tarih formatı için intl paketindeki metod gerekirse main.dart'tan çağrılmalıdır
+    // import 'package:intl/date_symbol_data_local.dart';
+    // initializeDateFormatting('tr_TR');
+  }
+
+  // API formatındaki tarih stringini DateTime nesnesine çevirir
+  static DateTime? parseApiDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) {
+      return null;
+    }
+    try {
+      return DateTime.parse(dateString);
+    } catch (e) {
+      return null;
+    }
+  }
+  
+  // Basit tarih parsing
+  static DateTime? parseDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) {
+      return null;
+    }
+    try {
+      return DateTime.parse(dateString);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Tam tarih formatı (gün-ay-yıl)
+  static String formatDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) {
+      return 'Belirtilmemiş';
+    }
+    
+    try {
+      final date = DateTime.parse(dateString);
+      return DateFormat('dd MMMM yyyy', 'tr_TR').format(date);
+    } catch (e) {
+      return dateString;
+    }
+  }
+
+  // Kısa tarih formatı (gün-ay)
+  static String formatShortDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) {
+      return 'Belirtilmemiş';
+    }
+    
+    try {
+      final date = DateTime.parse(dateString);
+      return DateFormat('dd MMM', 'tr_TR').format(date);
+    } catch (e) {
+      return dateString;
+    }
+  }
+
+  // Tarih ve saat formatı
+  static String formatDateAndTime(String? dateString) {
+    if (dateString == null || dateString.isEmpty) {
+      return 'Belirtilmemiş';
+    }
+    
+    try {
+      final date = DateTime.parse(dateString);
+      return DateFormat('dd MMMM yyyy, HH:mm', 'tr_TR').format(date);
+    } catch (e) {
+      return dateString;
+    }
+  }
+  
+  // Türkçe tarih formatı (DateTime için)
+  static String formatTurkishDate(DateTime dateTime) {
+    return DateFormat('dd MMMM yyyy', 'tr_TR').format(dateTime);
+  }
+  
+  // Tarih ve saat formatı (DateTime için)
+  static String formatTurkishDateWithTime(DateTime dateTime) {
+    return DateFormat('dd MMMM yyyy, HH:mm', 'tr_TR').format(dateTime);
+  }
+  
+  // Türkçe tarih aralığı formatı
+  static String formatDateRange(DateTime startDate, DateTime endDate) {
+    final startFormat = DateFormat('dd MMM', 'tr_TR').format(startDate);
+    final endFormat = DateFormat('dd MMM', 'tr_TR').format(endDate);
+    return '$startFormat - $endFormat';
+  }
+
+  // Göreli tarih formatı (bugün, dün, vs.)
+  static String formatRelativeDate(String? dateString) {
+    if (dateString == null || dateString.isEmpty) {
+      return 'Belirtilmemiş';
+    }
+    
+    try {
+      final date = DateTime.parse(dateString);
+      final now = DateTime.now();
+      final difference = now.difference(date);
+      
+      if (difference.inDays == 0) {
+        return 'Bugün';
+      } else if (difference.inDays == 1) {
+        return 'Dün';
+      } else if (difference.inDays < 7) {
+        return '${difference.inDays} gün önce';
+      } else {
+        return DateFormat('dd MMMM yyyy', 'tr_TR').format(date);
+      }
+    } catch (e) {
+      return dateString;
+    }
+  }
+
+  // İki tarih arasındaki farkı hesaplar ve gün sayısını döndürür
+  static int daysBetween(String? startDate, String? endDate) {
+    if (startDate == null || endDate == null) {
+      return 0;
+    }
+    
+    try {
+      final start = DateTime.parse(startDate);
+      final end = DateTime.parse(endDate);
+      return end.difference(start).inDays;
+    } catch (e) {
+      return 0;
+    }
+  }
+  
+  // İki tarih arasında olup olmadığını kontrol eder (yıl dikkate alınmaz)
+  static bool isDateInRangeIgnoringYear(DateTime date, DateTime startDate, DateTime endDate) {
+    // Aynı yıla getirme işlemi
+    final normalizedDate = DateTime(2000, date.month, date.day);
+    final normalizedStart = DateTime(2000, startDate.month, startDate.day);
+    final normalizedEnd = DateTime(2000, endDate.month, endDate.day);
+    
+    // Tarih aralığı kontrolü
+    return normalizedDate.compareTo(normalizedStart) >= 0 && 
+           normalizedDate.compareTo(normalizedEnd) <= 0;
+  }
+  
+  // Bu hafta kontrolü
+  static bool isCurrentWeek(DateTimeRange range) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final startOfWeek = today.subtract(Duration(days: today.weekday - 1)); // Pazartesi
+    final endOfWeek = startOfWeek.add(const Duration(days: 6)); // Pazar
+    
+    return range.start.isAtSameMomentAs(startOfWeek) && 
+           range.end.isAtSameMomentAs(endOfWeek);
+  }
+  
+  // Bu ay kontrolü
+  static bool isCurrentMonth(DateTimeRange range) {
+    final now = DateTime.now();
+    final startOfMonth = DateTime(now.year, now.month, 1);
+    final nextMonth = now.month < 12 ? DateTime(now.year, now.month + 1, 1) : DateTime(now.year + 1, 1, 1);
+    final endOfMonth = nextMonth.subtract(const Duration(days: 1));
+    
+    return range.start.isAtSameMomentAs(startOfMonth) && 
+           range.end.isAtSameMomentAs(endOfMonth);
+  }
+  
+  // Türkçe DateRangePicker
+  static Future<DateTimeRange?> showTurkishDateRangePicker({
+    required BuildContext context,
+    required DateTimeRange initialDateRange,
+    required DateTime firstDate,
+    required DateTime lastDate,
+  }) async {
+    // Türkçe yerelleştirme için MaterialLocalizations kullanıyoruz
+    return showDateRangePicker(
+      context: context,
+      initialDateRange: initialDateRange,
+      firstDate: firstDate,
+      lastDate: lastDate,
+      helpText: 'Tarih Aralığı Seçin',
+      cancelText: 'İPTAL',
+      confirmText: 'TAMAM',
+      saveText: 'KAYDET',
+      errorFormatText: 'Geçersiz tarih formatı',
+      errorInvalidText: 'Geçersiz tarih',
+      errorInvalidRangeText: 'Geçersiz tarih aralığı',
+      fieldStartHintText: 'Başlangıç Tarihi',
+      fieldEndHintText: 'Bitiş Tarihi',
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Color(0xFF1D3557), // Renk kodlarını kendi temana göre ayarla
+              onPrimary: Colors.white,
+              surface: Colors.white,
+              onSurface: Color(0xFF333333),
+            ),
+          ),
+          child: child!,
+        );
+      },
+    );
+  }
+}

@@ -233,7 +233,7 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
       // DateHelpers ile geliştirilmiş Türkçe tarih seçici
       final DateTimeRange? picked =
           await DateHelpers.showTurkishDateRangePicker(
-        context,
+        context: context,
         initialDateRange: DateTimeRange(start: safeStartDate, end: safeEndDate),
         firstDate: safeFirstDate,
         lastDate: safeLastDate,
@@ -643,7 +643,7 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
                   const SizedBox(width: 8),
                   Text(
                     _selectedTimeFilter,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Color(0xFF474747),
                       fontSize: 15,
                       fontFamily: 'Manrope',
@@ -738,7 +738,7 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withAlpha(13),
+              color: Colors.black.withValues(red: 0, green: 0, blue: 0, opacity: 0.05),
               blurRadius: 4,
               offset: const Offset(0, 2),
             ),
