@@ -9,7 +9,7 @@ import '../../models/user_model.dart';
 import '../../utils/logger.dart'; // Logger için import eklendi
 import '../../utils/date_helpers.dart'; // DateHelpers için import eklendi
 import 'admin_create_trip_screen.dart';
-import 'trip_detail_screen_new.dart'; // Yeni sefer detay ekranı için import eklendi
+import 'trip_detail_screen.dart'; // Sefer detay ekranı için import eklendi
 import 'profile_edit_screen.dart';
 import '../../widgets/profile_image_widget.dart';
 

@@ -24,6 +24,7 @@ class TripDetailScreen extends StatefulWidget {
 
 class _TripDetailScreenState extends State<TripDetailScreen> {
   bool _isLoading = false;
+  List<Load> _additionalLoads = []; // Yeni eklenen yükleri tutacak liste
 
   @override
   void initState() {
@@ -155,58 +156,81 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          _navItem(
-            label: 'Ana Sayfa',
-            icon: Icons.home,
-            isActive: false,
-            onTap: () {
-              Navigator.pushReplacementNamed(context, '/admin_home');
-            },
-          ),
-          _navItem(
-            label: 'Giderler',
-            icon: Icons.attach_money,
-            isActive: false,
-            onTap: () {
-              // Handle navigation
-            },
-          ),
-          _navItem(
-            label: 'Seferler',
-            icon: Icons.local_shipping,
-            isActive: true,
-            onTap: () {
-              // Already on this screen
-            },
-          ),
-          _navItem(
-            label: 'Hesabım',
-            icon: Icons.person,
-            isActive: false,
-            onTap: () {
-              // Handle navigation
-            },
-          ),
-          _navItem(
-            label: 'Ayarlar',
-            icon: Icons.settings,
-            isActive: false,
-            onTap: () {
-              // Handle navigation
-            },
-          ),
+          _bottomNavItem(Icons.home, 'Ana Sayfa', false, () {
+            Navigator.pushReplacementNamed(context, '/admin_home');
+          }),
+          _bottomNavItem(Icons.attach_money, 'Giderler', false, () {
+            // Handle navigation
+          }),
+          _bottomNavItem(Icons.local_shipping, 'Seferler', true, () {
+            // Already on this screen
+          }),
+          _bottomNavItem(Icons.person, 'Hesabım', false, () {
+            // Handle navigation
+          }),
+          _bottomNavItem(Icons.settings, 'Ayarlar', false, () {
+            // Handle navigation
+          }),
         ],
       ),
     );
   }
 
+  // Toplam öğe sayısını döndüren yardımcı metod
+  int _getItemCount() {
+    // Eğer hem trip.loads hem de _additionalLoads boşsa, 2 demo yük göster
+    if ((widget.trip.loads == null || widget.trip.loads!.isEmpty) &&
+        _additionalLoads.isEmpty) {
+      return 2; // Demo için 2 yük
+    }
+
+    // Değilse, her iki listenin toplamını döndür
+    int originalCount = widget.trip.loads?.length ?? 0;
+    return originalCount + _additionalLoads.length;
+  }
+
+  // Belirli bir indeksteki yükü döndüren yardımcı metod
+  Load _getLoadAtIndex(int index) {
+    // Eğer hem trip.loads hem de _additionalLoads boşsa, demo yükleri döndür
+    if ((widget.trip.loads == null || widget.trip.loads!.isEmpty) &&
+        _additionalLoads.isEmpty) {
+      final demoLoads = [
+        Load(
+          id: 1,
+          name: 'Paletli Mermer Fayans',
+          price: 14412,
+          customerName: 'Gediz Ekol Madencilik',
+          startLocation: 'Gediz, Kütahya',
+          endLocation: 'Pozantı,Adana',
+          loadPoint: 3,
+        ),
+        Load(
+          id: 2,
+          name: 'Paletli Mermer Fayans',
+          price: 14412,
+          customerName: 'Gediz Ekol Madencilik',
+          startLocation: 'Gediz, Kütahya',
+          endLocation: 'Pozantı,Adana',
+          loadPoint: 3,
+        )
+      ];
+      return demoLoads[index];
+    }
+
+    // Önce widget.trip.loads içindeki yükleri göster (eğer varsa)
+    int originalCount = widget.trip.loads?.length ?? 0;
+
+    if (index < originalCount) {
+      return widget.trip.loads![index];
+    } else {
+      // Sonra _additionalLoads içindeki yükleri göster
+      return _additionalLoads[index - originalCount];
+    }
+  }
+
   // Navigation item
-  Widget _navItem({
-    required String label,
-    required IconData icon,
-    bool isActive = false,
-    required VoidCallback onTap,
-  }) {
+  Widget _bottomNavItem(
+      IconData icon, String label, bool isActive, VoidCallback onTap) {
     return GestureDetector(
       onTap: onTap,
       child: Column(
@@ -632,8 +656,8 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                           // Yeni yük eklendiyse state'i güncelle
                           if (result != null && mounted) {
                             setState(() {
-                              // Güncellenmiş listeyi almak için yeniden yüklenebilir
-                              // Ya da eklenen yükü direkt listeye ekleyebiliriz
+                              // Eklenen yükü _additionalLoads listesine ekle
+                              _additionalLoads.add(result as Load);
                             });
                           }
                         },
@@ -674,36 +698,11 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                 ),
                 child: ListView.builder(
                   padding: const EdgeInsets.only(left: 16, right: 16, top: 16),
-                  itemCount:
-                      widget.trip.loads?.length ?? 2, // Default to 2 for demo
+                  // Hem trip.loads hem de _additionalLoads'daki yükleri göster
+                  // Eğer her ikisi de boşsa, demo yükleri göster
+                  itemCount: _getItemCount(),
                   itemBuilder: (context, index) {
-                    // Demo yükler
-                    if (widget.trip.loads == null ||
-                        widget.trip.loads!.isEmpty) {
-                      final demoLoads = [
-                        Load(
-                          id: 1,
-                          name: 'Paletli Mermer Fayans',
-                          price: 14412,
-                          customerName: 'Gediz Ekol Madencilik',
-                          startLocation: 'Gediz, Kütahya',
-                          endLocation: 'Pozantı,Adana',
-                          loadPoint: 3,
-                        ),
-                        Load(
-                          id: 2,
-                          name: 'Paletli Mermer Fayans',
-                          price: 14412,
-                          customerName: 'Gediz Ekol Madencilik',
-                          startLocation: 'Gediz, Kütahya',
-                          endLocation: 'Pozantı,Adana',
-                          loadPoint: 3,
-                        )
-                      ];
-                      return _buildLoadCard(demoLoads[index]);
-                    }
-
-                    final load = widget.trip.loads![index];
+                    final load = _getLoadAtIndex(index);
                     return _buildLoadCard(load);
                   },
                 ),
@@ -722,12 +721,11 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
     );
   }
 
-  // Yük kartı widget'ı
+  // Yük kartı widget'ı - iyileştirilmiş tasarım
   Widget _buildLoadCard(Load load) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
-      width: 400,
-      height: 138,
+      width: double.infinity, // Esnek genişlik
       decoration: ShapeDecoration(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -737,19 +735,28 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
           ),
           borderRadius: BorderRadius.circular(10),
         ),
+        shadows: const [
+          BoxShadow(
+            color: Color(0x0D000000), // %5 saydamlık
+            blurRadius: 4,
+            offset: Offset(0, 2),
+            spreadRadius: 0,
+          ),
+        ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min, // İçeriğe göre boyutlandırma
           children: [
             // Ürün ismi ve fiyat - üst satır
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Ürün ismi
-                SizedBox(
-                  width: 194,
+                // Ürün ismi - Taşma kontrolü ekledik
+                Expanded(
+                  flex: 3,
                   child: Text(
                     load.name ?? 'Paletli Mermer Fayans',
                     style: const TextStyle(
@@ -757,14 +764,15 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                       fontSize: 18,
                       fontFamily: 'Manrope',
                       fontWeight: FontWeight.w700,
-                      height: 1.33,
                     ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
                   ),
                 ),
-
-                // Tutar
-                SizedBox(
-                  width: 132.01,
+                const SizedBox(width: 8),
+                // Tutar - Taşma kontrolü ekledik
+                Expanded(
+                  flex: 1,
                   child: Text(
                     '${load.price?.toStringAsFixed(0) ?? '14.412'}₺',
                     textAlign: TextAlign.right,
@@ -773,52 +781,63 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                       fontSize: 18,
                       fontFamily: 'Manrope',
                       fontWeight: FontWeight.w600,
-                      height: 1.33,
                     ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],
             ),
 
-            // Müşteri - orta satır
-            SizedBox(
-              width: 158,
-              height: 24,
-              child: Text(
-                load.customerName ?? 'Gediz Ekol Madencilik',
-                style: const TextStyle(
-                  color: Color(0xFF898A8A),
-                  fontSize: 15,
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w600,
-                  height: 1.60,
-                ),
-              ),
-            ),
-
-            // Konum - alt satır
-            SizedBox(
-              width: 217,
-              height: 24,
-              child: Text(
-                '${load.startLocation ?? 'Gediz, Kütahya'} > ${load.endLocation ?? 'Pozantı,Adana'}',
-                style: const TextStyle(
-                  color: Color(0xFFBCBEC2),
-                  fontSize: 13,
-                  fontFamily: 'Manrope',
-                  fontWeight: FontWeight.w600,
-                  height: 1.85,
-                ),
-              ),
-            ),
-
             const SizedBox(height: 8),
 
-            // Yükleme noktası butonu
+            // Müşteri - Taşma kontrolü ekledik
+            Text(
+              load.customerName ?? 'Gediz Ekol Madencilik',
+              style: const TextStyle(
+                color: Color(0xFF898A8A),
+                fontSize: 15,
+                fontFamily: 'Manrope',
+                fontWeight: FontWeight.w600,
+              ),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+            
+            const SizedBox(height: 4),
+
+            // Konum satırı - Taşma kontrolü ekledik
+            Row(
+              children: [
+                // Başlangıç lokasyonu ikonu
+                const Icon(
+                  Icons.location_on_outlined,
+                  color: Color(0xFFBCBEC2),
+                  size: 16,
+                ),
+                const SizedBox(width: 4),
+                // Konum metni
+                Expanded(
+                  child: Text(
+                    '${load.startLocation ?? 'Gediz, Kütahya'} > ${load.endLocation ?? 'Pozantı, Adana'}',
+                    style: const TextStyle(
+                      color: Color(0xFFBCBEC2),
+                      fontSize: 13,
+                      fontFamily: 'Manrope',
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 10),
+
+            // Yükleme noktası butonu - Daha modern görünüm
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: const Color(0xFFF8F9FA),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: const Color(0xFFE0E2E3)),
               ),
@@ -827,17 +846,17 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                 children: [
                   // Sayı dairesi
                   Container(
-                    width: 18,
-                    height: 18,
-                    decoration: const ShapeDecoration(
-                      color: Color(0xFFD9D9D9),
-                      shape: OvalBorder(),
+                    width: 20,
+                    height: 20,
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF06263E),
+                      shape: BoxShape.circle,
                     ),
                     child: Center(
                       child: Text(
                         '${load.loadPoint ?? 3}',
                         style: const TextStyle(
-                          color: Color(0xFF474747),
+                          color: Colors.white,
                           fontSize: 13,
                           fontFamily: 'Manrope',
                           fontWeight: FontWeight.w600,
@@ -845,22 +864,15 @@ class _TripDetailScreenState extends State<TripDetailScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(width: 8),
-
                   // Yükleme noktası metni
-                  const SizedBox(
-                    width: 104,
-                    height: 14,
-                    child: Text(
-                      'Yükleme Noktası',
-                      style: TextStyle(
-                        color: Color(0xFF474747),
-                        fontSize: 13,
-                        fontFamily: 'Manrope',
-                        fontWeight: FontWeight.w600,
-                        height: 1.85,
-                      ),
+                  const Text(
+                    'Yükleme Noktası',
+                    style: TextStyle(
+                      color: Color(0xFF474747),
+                      fontSize: 13,
+                      fontFamily: 'Manrope',
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
