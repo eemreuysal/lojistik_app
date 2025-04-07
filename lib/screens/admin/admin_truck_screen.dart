@@ -9,7 +9,7 @@ import '../../models/user_model.dart';
 import '../../utils/logger.dart'; // Logger için import eklendi
 import '../../utils/date_helpers.dart'; // DateHelpers için import eklendi
 import 'admin_create_trip_screen.dart';
-import 'trip_detail_screen.dart'; // Sefer detay ekranı için import eklendi
+import 'trip_detail_screen_new.dart'; // Yeni sefer detay ekranı için import eklendi
 import 'profile_edit_screen.dart';
 import '../../widgets/profile_image_widget.dart';
 
@@ -103,7 +103,8 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
     final tripsProvider = Provider.of<TripsProvider>(context, listen: false);
     final allTrips = tripsProvider.trips;
     logger.d("🔍 FİLTRELEME BAŞLIYOR: Toplam sefer sayısı: ${allTrips.length}");
-    logger.d("🔍 Seçilen tarih aralığı: ${DateHelpers.formatDateRange(_startDate, _endDate)}");
+    logger.d(
+        "🔍 Seçilen tarih aralığı: ${DateHelpers.formatDateRange(_startDate, _endDate)}");
 
     setState(() {
       // Önce seferleri kopyalayalım
@@ -112,10 +113,12 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
       // 1. ADIM: DURUM FİLTRELEMESİ
       if (_selectedFilter == 'active') {
         tempTrips = tempTrips.where((trip) => trip.isActive).toList();
-        logger.d("🔍 Aktif seferler filtrelendi: ${tempTrips.length} sefer kaldı");
+        logger.d(
+            "🔍 Aktif seferler filtrelendi: ${tempTrips.length} sefer kaldı");
       } else if (_selectedFilter == 'completed') {
         tempTrips = tempTrips.where((trip) => !trip.isActive).toList();
-        logger.d("🔍 Tamamlanan seferler filtrelendi: ${tempTrips.length} sefer kaldı");
+        logger.d(
+            "🔍 Tamamlanan seferler filtrelendi: ${tempTrips.length} sefer kaldı");
       }
 
       // 2. ADIM: TARİH FİLTRELEMESİ
@@ -126,7 +129,8 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
           final tripNumber = tempTrips[i].tripNumber;
           final startDate = tempTrips[i].startDate;
           final formattedStartDate = tempTrips[i].formattedStartDate;
-          logger.d("   - Sefer #${i + 1}: $tripNumber, Tarih: $startDate, Formatlanmış: $formattedStartDate");
+          logger.d(
+              "   - Sefer #${i + 1}: $tripNumber, Tarih: $startDate, Formatlanmış: $formattedStartDate");
         }
 
         // Önceki listeyi yedekleyelim
@@ -139,26 +143,30 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
 
           // Tarih elde edemedik, bu seferi listede tutalım
           if (tripDate == null) {
-            logger.w("⚠️ Tarih çözülemedi: ${trip.tripNumber} - ${trip.startDate}");
+            logger.w(
+                "⚠️ Tarih çözülemedi: ${trip.tripNumber} - ${trip.startDate}");
             return true;
           }
 
           // Tarih karşılaştırma - Sadece ay ve gün dikkate alınarak
-          final bool inRange =
-              DateHelpers.isDateInRangeIgnoringYear(tripDate, _startDate, _endDate);
+          final bool inRange = DateHelpers.isDateInRangeIgnoringYear(
+              tripDate, _startDate, _endDate);
 
           if (!inRange) {
-            logger.d("❌ Tarih aralık dışı: ${trip.tripNumber}, Tarih: $tripDate (${_startDate} - ${_endDate})");
+            logger.d(
+                "❌ Tarih aralık dışı: ${trip.tripNumber}, Tarih: $tripDate (${_startDate} - ${_endDate})");
           }
 
           return inRange;
         }).toList();
 
-        logger.d("🔍 Tarih filtrelemesi sonrası: ${tempTrips.length} sefer kaldı (önceki: ${beforeDateFilter.length})");
+        logger.d(
+            "🔍 Tarih filtrelemesi sonrası: ${tempTrips.length} sefer kaldı (önceki: ${beforeDateFilter.length})");
 
         // Eğer filtreleme sonucu boşsa ve ana filtremiz 'all' ise, sonuçları koruyalım
         if (tempTrips.isEmpty && _selectedFilter == 'all') {
-          logger.w("⚠️ Tarih filtrelemesi tüm seferleri eledi, tüm seferler gösteriliyor");
+          logger.w(
+              "⚠️ Tarih filtrelemesi tüm seferleri eledi, tüm seferler gösteriliyor");
           tempTrips = beforeDateFilter;
         }
       }
@@ -175,23 +183,29 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
               (trip.driverName?.toLowerCase().contains(searchTerm) ?? false);
         }).toList();
 
-        logger.d("🔍 Arama filtresi sonrası: ${tempTrips.length} sefer kaldı (önceki: $beforeSearchFilter)");
+        logger.d(
+            "🔍 Arama filtresi sonrası: ${tempTrips.length} sefer kaldı (önceki: $beforeSearchFilter)");
       }
 
       // Sonuçları atayalım ve devam edenleri önce gösterelim
       _filteredTrips = tempTrips;
-      
+
       // Devam eden seferleri önce göster
       _filteredTrips.sort((a, b) {
         // Önce durum karşılaştırması (devam edenler önce)
-        if (a.isActive && !b.isActive) return -1; // a devam ediyor, b tamamlanmış -> a önce
-        if (!a.isActive && b.isActive) return 1;  // a tamamlanmış, b devam ediyor -> b önce
-        
+        if (a.isActive && !b.isActive) {
+          return -1; // a devam ediyor, b tamamlanmış -> a önce
+        }
+        if (!a.isActive && b.isActive) {
+          return 1; // a tamamlanmış, b devam ediyor -> b önce
+        }
+
         // Eğer iki sefer de aynı durumdaysa, tarihe göre sırala (en yeniden en eskiye)
         return b.createdAt.compareTo(a.createdAt);
       });
-      
-      logger.d("✅ Filtreleme tamamlandı: ${_filteredTrips.length} sefer gösteriliyor");
+
+      logger.d(
+          "✅ Filtreleme tamamlandı: ${_filteredTrips.length} sefer gösteriliyor");
     });
   }
 
@@ -217,7 +231,8 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
           _endDate.isAfter(safeLastDate) ? safeLastDate : _endDate;
 
       // DateHelpers ile geliştirilmiş Türkçe tarih seçici
-      final DateTimeRange? picked = await DateHelpers.showTurkishDateRangePicker(
+      final DateTimeRange? picked =
+          await DateHelpers.showTurkishDateRangePicker(
         context,
         initialDateRange: DateTimeRange(start: safeStartDate, end: safeEndDate),
         firstDate: safeFirstDate,
@@ -236,7 +251,8 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
             _selectedTimeFilter = 'Bu Ay';
           } else {
             // Türkçe format - DD MMM - DD MMM
-            _selectedTimeFilter = DateHelpers.formatDateRange(picked.start, picked.end);
+            _selectedTimeFilter =
+                DateHelpers.formatDateRange(picked.start, picked.end);
           }
 
           logger.d("Seçilen tarih aralığı: $_selectedTimeFilter");
@@ -728,8 +744,8 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
             ),
           ],
           border: Border.all(
-            color: trip.isActive 
-                ? AppTheme.primary.withAlpha(51) 
+            color: trip.isActive
+                ? AppTheme.primary.withAlpha(51)
                 : const Color(0xFFEAEAEA),
             width: 1,
           ),
@@ -750,12 +766,16 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
                         children: [
                           Text(
                             trip.tripNumber,
-                            style: AppTheme.manropeBold(18, const Color(0xFF474747)),
+                            style: AppTheme.manropeBold(
+                                18, const Color(0xFF474747)),
                           ),
                           const SizedBox(width: 8),
                           Icon(
-                            trip.isActive ? Icons.local_shipping : Icons.done_all,
-                            color: trip.isActive ? AppTheme.primary : Colors.green,
+                            trip.isActive
+                                ? Icons.local_shipping
+                                : Icons.done_all,
+                            color:
+                                trip.isActive ? AppTheme.primary : Colors.green,
                             size: 16,
                           ),
                         ],
@@ -763,13 +783,14 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
 
                       // Status badge
                       Container(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: trip.isActive
                               ? const Color(0xFFD3F0FF)
                               : const Color(0xFFDBFFDF),
-                          borderRadius: BorderRadius.circular(20), // Daha yuvarlak
+                          borderRadius:
+                              BorderRadius.circular(20), // Daha yuvarlak
                         ),
                         child: Text(
                           trip.isActive ? 'Devam Ediyor' : 'Tamamlandı',
@@ -789,19 +810,23 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
                   // Tarih bilgisi daha okunaklı düzende
                   Row(
                     children: [
-                      const Icon(Icons.calendar_month, size: 16, color: Color(0xFFBCBEC2)),
+                      const Icon(Icons.calendar_month,
+                          size: 16, color: Color(0xFFBCBEC2)),
                       const SizedBox(width: 4),
                       Text(
                         trip.formattedStartDate,
-                        style: AppTheme.manropeSemiBold(13, const Color(0xFFBCBEC2)),
+                        style: AppTheme.manropeSemiBold(
+                            13, const Color(0xFFBCBEC2)),
                       ),
                       // Saat ve dakikayı önceden değişkenlere atayarak süslü parantez sorununu çözüyoruz
                       Builder(builder: (context) {
                         final hour = trip.createdAt.hour;
-                        final minute = trip.createdAt.minute.toString().padLeft(2, '0');
+                        final minute =
+                            trip.createdAt.minute.toString().padLeft(2, '0');
                         return Text(
                           ' $hour:$minute',
-                          style: AppTheme.manropeSemiBold(13, const Color(0xFFBCBEC2)),
+                          style: AppTheme.manropeSemiBold(
+                              13, const Color(0xFFBCBEC2)),
                         );
                       }),
                     ],
@@ -812,25 +837,29 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
                   // Araç ve sürücü bilgisi
                   Row(
                     children: [
-                      const Icon(Icons.directions_car, size: 16, color: Color(0xFF838383)),
+                      const Icon(Icons.directions_car,
+                          size: 16, color: Color(0xFF838383)),
                       const SizedBox(width: 4),
                       Text(
                         trip.vehiclePlate ?? "Plaka yok",
-                        style: AppTheme.manropeSemiBold(13, const Color(0xFF838383)),
+                        style: AppTheme.manropeSemiBold(
+                            13, const Color(0xFF838383)),
                       ),
                       const SizedBox(width: 12),
-                      const Icon(Icons.person, size: 16, color: Color(0xFF838383)),
+                      const Icon(Icons.person,
+                          size: 16, color: Color(0xFF838383)),
                       const SizedBox(width: 4),
                       Text(
                         trip.driverName ?? "Sürücü atanmadı",
-                        style: AppTheme.manropeSemiBold(13, const Color(0xFF838383)),
+                        style: AppTheme.manropeSemiBold(
+                            13, const Color(0xFF838383)),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
-            
+
             // Sağa doğru ok ikonu ekleyelim
             Positioned(
               right: 10,
@@ -856,7 +885,7 @@ class _AdminTruckScreenState extends State<AdminTruckScreen> {
         builder: (context) => TripDetailScreen(trip: trip),
       ),
     );
-    
+
     // Eğer detay sayfasından güncellenmiş veri ile dönüldüyse listeyi yenile
     if (result == true) {
       _loadTrips();
